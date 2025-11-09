@@ -1,0 +1,69 @@
+* {
+    box-sizing: border-box;
+    margin: 0px;
+}
+
+img {
+    width: 100%;
+}
+
+ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.character {
+    display: flex;
+    flex-basis: calc((100% - 30px) / 3);
+    background-color: antiquewhite;
+    padding: 15px;
+}
+
+.left-side, .right-side {
+    width: 50%;
+}
+
+.left-side {
+    padding: 0 1vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.stats {
+    display: grid;
+    flex-wrap: wrap;
+    gap: 1.5vw;
+    grid-template-columns: 1fr 1fr;
+}
+
+.stats-box {
+    --raio: 5px;
+    padding: 0.2vw;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+
+    mask-image:
+    /* Camada 1: Um retângulo sólido (a forma base) */
+    linear-gradient(white, white),
+
+    /* Camada 2: Quatro círculos para "cortar" os cantos */
+    radial-gradient(circle at 0 0, white var(--raio), transparent calc(var(--raio) + 1px)),
+    radial-gradient(circle at 100% 0, white var(--raio), transparent calc(var(--raio) + 1px)),
+    radial-gradient(circle at 0 100%, white var(--raio), transparent calc(var(--raio) + 1px)),
+    radial-gradient(circle at 100% 100%, white var(--raio), transparent calc(var(--raio) + 1px));
+
+    /* 4. Como as camadas se combinam: SUBTRAIR */
+    /* Isso diz ao navegador para pegar a Camada 1 e subtrair a Camada 2 */
+    mask-composite: subtract;           /* Padrão W3C / Chrome */
+    -webkit-mask-composite: destination-out; /* Safari */
+    mask-composite: exclude;           /* Firefox */
+}
