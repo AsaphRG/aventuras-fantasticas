@@ -18,16 +18,6 @@ return new class extends Migration
             $table->text('history');
             $table->timestamps();
         });
-
-        Schema::create('choices', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(StoryNode::class, 'from_story_node_id')->constrained()->onDelete('set null');
-            $table->text('choice_description');
-            $table->foreignIdFor(StoryNode::class, 'to_story_node_id')->constrained()->onDelete('set null');
-            $table->string('required_flag', 255)->nullable();
-            $table->string('set_flag', 255)->nullable();
-            $table->timestamps();
-        });
     }
 
     /**
@@ -35,7 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('choices');
         Schema::dropIfExists('story_nodes');
     }
 };

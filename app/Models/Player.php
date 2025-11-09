@@ -30,37 +30,28 @@ class Player extends Model
         'currentStoryNode',
     ];
 
-    /**
-     * Get the user that owns the player stats.
-     * Um 'Player' (jogador) pertence a um 'User' (usuário).
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the items for the player.
-     * Um 'Player' (jogador) pode ter muitos 'Items' (itens).
-     */
     public function items(): HasMany
     {
-        // Isso assume que você criará um model App\Models\Item
         return $this->hasMany(Item::class);
     }
 
-    /**
-     * Get the enchantments for the player.
-     * Um 'Player' (jogador) pode ter muitos 'Enchantment' (encantamentos).
-     */
     public function enchantments(): HasMany
     {
-        // Isso assume que você criará um model App\Models\Enchantment
         return $this->hasMany(Enchantment::class);
     }
 
     public function storyNode(): HasOne
     {
         return $this->hasOne(StoryNode::class);
+    }
+
+    public function flags(): HasMany
+    {
+        return $this->hasMany(PlayerFlag::class);
     }
 }

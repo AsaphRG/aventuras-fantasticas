@@ -14,9 +14,10 @@ return new class extends Migration
     {
         Schema::create('player_flag', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Player::class, 'player_id');
-            $table->string('flag', 255);
+            $table->foreignIdFor(Player::class, 'player_id')->constrained()->onDelete('cascade');
+            $table->string('flag_name', 255);
             $table->timestamps();
+            $table->unique(['player_id', 'flag_name']);
         });
     }
 
