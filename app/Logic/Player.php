@@ -13,7 +13,7 @@ class Player extends Fighter {
     protected int $enchantmentStart;
     protected array $items;
     protected array $enchantments;
-    protected int $currentChapter;
+    protected mixed $currentStoryNode;
     protected mixed $id;
 
     /**
@@ -27,9 +27,9 @@ class Player extends Fighter {
      * @param int|null $luckCurrent
      * @param int|null $enchantment
      * @param int|null $gold
-     * @param int|null $currentChapter
+     * @param int|null $currentStoryNode
      */
-    public function __construct(?int $skillStart = null, ?int $skillCurrent = null, ?int $energyStart = null, ?int $energyCurrent = null, ?int $luckStart = null, ?int $luckCurrent = null, ?int $enchantment = null, int $gold = 0, int $currentChapter = -1, mixed $id = null) {
+    public function __construct(?int $skillStart = null, ?int $skillCurrent = null, ?int $energyStart = null, ?int $energyCurrent = null, ?int $luckStart = null, ?int $luckCurrent = null, ?int $enchantment = null, int $gold = 0, mixed $currentStoryNode = null, mixed $id = null) {
         $skillStart = $skillStart ?? (rand(1, 6) + 6);
         $skillCurrent = isNull($skillCurrent) ? $skillStart : $skillCurrent;
         $energyStart = $energyStart ?? (rand(1, 6) + rand(1, 6) + 12);
@@ -48,7 +48,7 @@ class Player extends Fighter {
         $this->gold = $gold;
         $this->items = [];
         $this->enchantments = [];
-        $this->currentChapter = $currentChapter;
+        $this->currentStoryNode = $currentStoryNode;
         $this->id = $id;
     }
 
@@ -66,7 +66,7 @@ class Player extends Fighter {
     public function getGold():int {return $this->gold;}
     public function increaseGold(int $value):void {$this->gold += $value;}
 
-    public function getCurrentChapter():int {return $this->currentChapter;}
+    public function getCurrentStoryNode():mixed {return $this->currentStoryNode;}
 
     public function testLuck():bool {
         if((rand(1, 6) + rand(1, 6)) <= $this->luckCurrent) {

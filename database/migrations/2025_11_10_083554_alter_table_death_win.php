@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('enemies', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->integer('ability');
-            $table->integer('energy');
+        Schema::table('players', function (Blueprint $table) {
+            $table->boolean('win')->default(false);
+            $table->boolean('dead')->default(false);
         });
     }
 
@@ -24,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('enemies');
+        Schema::table('players', function (Blueprint $table) {
+            $table->dropColumn('win');
+            $table->dropColumn('dead');
+        });
     }
 };

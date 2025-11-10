@@ -17,7 +17,6 @@ return new class extends Migration
             $table->text('description');
             $table->integer('abilityBonus')->nullable();
             $table->enum('category', ['Consumable', 'Mission', 'Weapon']);
-            $table->timestamps();
         });
     }
 

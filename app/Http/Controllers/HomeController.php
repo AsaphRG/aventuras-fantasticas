@@ -13,12 +13,12 @@ class HomeController extends Controller
 
         $user = $request->user();
 
-        $characters = $user->character;
+        $characters = $user->character->reverse();
 
         $playable_character = [];
 
         foreach($characters as $character) {
-            $playable_character[] = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentChapter, $character->id);
+            $playable_character[] = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id);
         }
 
         return view('home', [

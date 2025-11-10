@@ -28,6 +28,8 @@ class Player extends Model
         'enchantmentStart',
         'gold',
         'currentStoryNode',
+        'win',
+        'dead'
     ];
 
     public function user(): BelongsTo
@@ -53,5 +55,10 @@ class Player extends Model
     public function flags(): HasMany
     {
         return $this->hasMany(PlayerFlag::class);
+    }
+
+    public function playerStoryNode(): HasMany
+    {
+        return $this->hasMany(PlayerStoryNode::class);
     }
 }

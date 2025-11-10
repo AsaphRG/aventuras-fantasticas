@@ -46,10 +46,10 @@
                         @csrf
                         <div class="left-side">
                             @php
-                                $skill = $character->getSkillStart() / 12;
-                                $energy = $character->getEnergyStart() / 24;
-                                $luck = $character->getLuckStart() / 12;
-                                $enchantment = $character->getEnchantmentStart() / 18;
+                                $skill = ($character->getSkillStart() - 7) / (12 - 7);
+                                $energy = ($character->getEnergyStart() - 14) / (24 - 14);
+                                $luck = ($character->getLuckStart() - 7) / (12 - 7);
+                                $enchantment = ($character->getEnchantmentStart() - 8) / (18 - 8);
                             @endphp
                             <div>Personagem: {{$character->getId()}}</div>
                             <div class="stats">
@@ -74,7 +74,7 @@
                                     <div>Ouro</div>
                                 </div>
                                 <div class="stats-box">
-                                    <div>{{$character->getCurrentChapter()}}</div>
+                                    <div>{{$character->getCurrentStoryNode()}}</div>
                                     <div>Capítulo</div>
                                 </div>
                             </div>
@@ -84,7 +84,33 @@
                         <div class="right-side">
                             <img src="
                             @if ($character->getGold() >= 100)
-                                {{asset('images/Mingy.png')}}
+                                {{ asset('images/Mingy.png') }}
+                            @elseif ($skill == 0 && $energy == 0 && $luck == 0 && $enchantment == 0)
+                                {{ asset('images/The Weak.png') }}
+                            @elseif ($skill == 1 && $energy == 1 && $luck == 1 && $enchantment == 1)
+                                {{ asset('images/Vitruvian.png') }}
+                            @elseif ($skill == $energy && $skill == $luck && $skill == $enchantment)
+                                {{ asset('images/Pilgrim.png') }}
+                            @elseif ($skill == $energy && $skill == $luck && $skill > $enchantment)
+                                {{ asset('images/Swashbuckler.png') }}
+                            @elseif ($skill == $energy && $skill == $enchantment && $skill > $luck)
+                                {{ asset('images/Paladin.png') }}
+                            @elseif ($skill > $energy && $skill == $luck && $skill == $enchantment)
+                                {{ asset('images/Artificer.png') }}
+                            @elseif ($skill < $energy && $energy == $luck && $energy == $enchantment)
+                                {{ asset('images/Xamã.png') }}
+                            @elseif ($skill == $energy && $skill > $luck && $skill > $enchantment)
+                                {{ asset('images/Monk.png') }}
+                            @elseif ($skill == $luck && $skill > $energy && $skill > $enchantment)
+                                {{ asset('images/Rogue.png') }}
+                            @elseif ($skill == $enchantment && $skill > $energy && $skill > $luck)
+                                {{ asset('images/Mage.png') }}
+                            @elseif ($energy == $luck && $energy > $skill && $energy > $enchantment)
+                                {{ asset('images/Druid.png') }}
+                            @elseif ($energy == $enchantment && $energy > $skill && $energy > $luck)
+                                {{ asset('images/Cleric.png') }}
+                            @elseif ($luck == $enchantment && $luck > $skill && $luck > $energy)
+                                {{ asset('images/Sorcerer.png') }}
                             @elseif ($skill > $energy && $skill > $luck && $skill > $enchantment)
                                 {{ asset('images/Warrior.png') }}
                             @elseif ($energy > $skill && $energy > $luck && $energy > $enchantment)
@@ -92,9 +118,7 @@
                             @elseif ($luck > $skill && $luck > $energy && $luck > $enchantment)
                                 {{ asset('images/Ranger.png') }}
                             @elseif ($enchantment > $skill && $enchantment > $energy && $enchantment > $luck)
-                                {{asset('images/Mage.png')}}
-                            @else
-                                {{ asset('images/Monk.png') }}
+                                {{ asset('images/Wizard.png') }}
                             @endif
                             " alt="">
                         </div>

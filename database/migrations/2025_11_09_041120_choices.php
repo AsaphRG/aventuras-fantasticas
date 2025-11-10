@@ -19,7 +19,6 @@ return new class extends Migration
             $table->foreignIdFor(StoryNode::class, 'to_story_node_id')->nullable()->constrained()->onDelete('set null');
             $table->string('required_flag', 255)->nullable();
             $table->string('set_flag', 255)->nullable();
-            $table->timestamps();
         });
     }
 
