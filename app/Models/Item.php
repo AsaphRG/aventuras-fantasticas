@@ -16,17 +16,13 @@ class Item extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'player_id', // Importante para associar o item ao criar
+        'player_id',
         'name',
         'description',
         'abilityBonus',
         'category',
     ];
 
-    /**
-     * Get the player that owns the item.
-     * Um 'Item' (item) pertence a um 'Player' (jogador).
-     */
     public function player(): BelongsTo
     {
         return $this->belongsTo(Player::class);

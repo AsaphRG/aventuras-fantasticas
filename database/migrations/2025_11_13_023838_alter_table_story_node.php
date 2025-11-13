@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('story_nodes', function (Blueprint $table) {
-            $table->id();
-            $table->string('title', 255);
-            $table->text('history');
+        Schema::table('story_nodes', function (Blueprint $table) {
+            $table->boolean('battle')->default(false);
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('story_nodes');
+        Schema::table('story_nodes', function (Blueprint $table){
+            $table->dropColumn('battle');
+        });
     }
 };

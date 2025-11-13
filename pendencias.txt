@@ -1,0 +1,5 @@
+lógica de mágicas
+escolha de magias
+Controller de progressão
+Controller de batalhas
+criação de layout
