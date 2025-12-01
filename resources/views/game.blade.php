@@ -1,80 +1,173 @@
-<div class="character">
-    <div class="left-side">
-        @php
-            $skill = ($character->getSkillStart() - 7) / (12 - 7);
-            $energy = ($character->getEnergyStart() - 14) / (24 - 14);
-            $luck = ($character->getLuckStart() - 7) / (12 - 7);
-            $enchantment = ($character->getEnchantmentStart() - 8) / (18 - 8);
-        @endphp
-        <div>Personagem: {{$character->getId()}}</div>
-        <div class="stats">
-            <div class="stats-box">
-                <div>{{$character->getSkillCurrent()}} - {{number_format($skill * 100, 0, ',', '.')."%"}}</div>
-                <div>Habilidade</div>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    @vite(['resources/js/app.js', 'resources/css/app.css'])
+    <title>{{ config('app.name', 'Laravel RPG') }} - Jogando</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-900 text-slate-200 font-sans antialiased min-h-screen flex flex-col bg-[url('/images/bg-texture.png')] bg-repeat">
+
+    <header class="w-full bg-slate-950 border-b border-slate-800 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="font-cinzel text-xl font-bold text-amber-500 tracking-wider flex items-center gap-2">
+                {{ config('app.name', 'RPG GAME') }}
             </div>
-            <div class="stats-box">
-                <div>{{$character->getEnergyCurrent()}} - {{number_format($energy * 100, 0, ',', '.')."%"}}</div>
-                <div>Energia</div>
+
+            <nav class="flex items-center gap-4">
+                <a href="{{ url('/') }}" class="text-slate-400 hover:text-amber-500 transition text-sm">Sair do Jogo</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
+            <div class="lg:col-span-2 flex flex-col gap-6 order-2 lg:order-1">
+
+                <div class="bg-slate-800/80 backdrop-blur-sm p-8 rounded-xl border border-slate-700 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-50"></div>
+
+                    <h1 class="font-cinzel text-3xl md:text-4xl text-amber-500 mb-6 drop-shadow-sm border-b border-slate-700 pb-4">
+                        {{$story->title}}
+                    </h1>
+
+                    <div class="prose prose-invert max-w-none text-slate-300 leading-loose text-lg font-light tracking-wide">
+                        {!! $story->history !!}
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <h3 class="text-slate-400 font-cinzel text-sm uppercase tracking-widest mb-2 ml-1">O que você vai fazer?</h3>
+
+                    @foreach ($choices as $choice)
+                        @php
+                            // Verifica se pode mostrar a escolha
+                            $canShow = $choice->required_flag == null || in_array($choice->required_flag, $character_flags);
+                        @endphp
+
+                        @if ($canShow)
+                            <form method="GET" action="{{ route('nextChap', ['id'=>$character->getId()]) }}" class="w-full">
+                                @csrf
+                                <input type="hidden" name="choice_id" value="{{$choice->id}}">
+
+                                <button type="submit" class="group w-full text-left p-5 bg-slate-900 border border-slate-700 rounded-lg hover:border-amber-500 hover:bg-slate-800 transition-all duration-300 shadow-md hover:shadow-amber-900/10 flex items-center justify-between">
+                                    <span class="text-lg text-slate-200 group-hover:text-amber-400 font-cinzel transition-colors">
+                                        {{$choice->choice_description}}
+                                    </span>
+                                    <span class="opacity-0 group-hover:opacity-100 text-amber-500 transition-opacity">
+                                        ➤
+                                    </span>
+                                </button>
+                            </form>
+                        @endif
+                    @endforeach
+                </div>
             </div>
-            <div class="stats-box">
-                <div>{{$character->getLuckCurrent()}} - {{number_format($luck * 100, 0, ',', '.')."%"}}</div>
-                <div>Sorte</div>
-            </div>
-            <div class="stats-box">
-                <div>{{$character->getEnchantmentStart()}} - {{number_format($enchantment * 100, 0, ',', '.')."%"}}</div>
-                <div>Encantamento</div>
-            </div class="stats-box">
-            <div class="stats-box">
-                <div>{{$character->getGold()}}</div>
-                <div>Ouro</div>
-            </div>
-            <div class="stats-box">
-                <div>{{$character->getCurrentStoryNode()}}</div>
-                <div>Capítulo</div>
+
+            <div class="lg:col-span-1 lg:sticky lg:top-8 order-1 lg:order-2">
+
+                <div class="bg-slate-800 rounded-xl overflow-hidden border border-slate-600 shadow-2xl">
+
+                    @php
+                        // Cálculos (Mantidos da sua lógica original)
+                        $skillPct = ($character->getSkillStart() - 7) / (12 - 7);
+                        $energyPct = ($character->getEnergyStart() - 14) / (24 - 14);
+                        $luckPct = ($character->getLuckStart() - 7) / (12 - 7);
+                        $enchantmentPct = ($character->getEnchantmentStart() - 8) / (18 - 8);
+
+                        // Lógica de Imagem
+                        $img = 'Mingy.png';
+                        $className = 'Aventureiro';
+
+                        // (Sua lógica de ifs gigantesca aqui - Simplifiquei para o exemplo, mas use a sua completa)
+                        if ($character->getGold() >= 100) { $img = 'Mingy.png'; $className = 'Rico'; }
+                        elseif ($skillPct == 0 && $energyPct == 0 && $luckPct == 0 && $enchantmentPct == 0) { $img = 'The Weak.png'; $className = 'Fraco'; }
+                        elseif ($skillPct == 1 && $energyPct == 1 && $luckPct == 1 && $enchantmentPct == 1) { $img = 'Vitruvian.png'; $className = 'Perfeito'; }
+                        elseif ($skillPct == $energyPct && $skillPct == $luckPct && $skillPct == $enchantmentPct) { $img = 'Pilgrim.png'; $className = 'Peregrino'; }
+                        elseif ($skillPct == $energyPct && $skillPct == $luckPct && $skillPct > $enchantmentPct) { $img = 'Swashbuckler.png'; $className = 'Espadachim'; }
+                        elseif ($skillPct == $energyPct && $skillPct == $enchantmentPct && $skillPct > $luckPct) { $img = 'Paladin.png'; $className = 'Paladino'; }
+                        elseif ($skillPct > $energyPct && $skillPct == $luckPct && $skillPct == $enchantmentPct) { $img = 'Artificer.png'; $className = 'Artífice'; }
+                        elseif ($skillPct < $energyPct && $energyPct == $luckPct && $energyPct == $enchantmentPct) { $img = 'Xamã.png'; $className = 'Xamã'; }
+                        elseif ($skillPct == $energyPct && $skillPct > $luckPct && $skillPct > $enchantmentPct) { $img = 'Monk.png'; $className = 'Monge'; }
+                        elseif ($skillPct == $luckPct && $skillPct > $energyPct && $skillPct > $enchantmentPct) { $img = 'Rogue.png'; $className = 'Ladino'; }
+                        elseif ($skillPct == $enchantmentPct && $skillPct > $energyPct && $skillPct > $luckPct) { $img = 'Mage.png'; $className = 'Mago'; }
+                        elseif ($energyPct == $luckPct && $energyPct > $skillPct && $energyPct > $enchantmentPct) { $img = 'Druid.png'; $className = 'Druida'; }
+                        elseif ($energyPct == $enchantmentPct && $energyPct > $skillPct && $energyPct > $luckPct) { $img = 'Cleric.png'; $className = 'Clérigo'; }
+                        elseif ($luckPct == $enchantmentPct && $luckPct > $skillPct && $luckPct > $energyPct) { $img = 'Sorcerer.png'; $className = 'Feiticeiro'; }
+                        elseif ($skillPct > $energyPct && $skillPct > $luckPct && $skillPct > $enchantmentPct) { $img = 'Warrior.png'; $className = 'Guerreiro'; }
+                        elseif ($energyPct > $skillPct && $energyPct > $luckPct && $energyPct > $enchantmentPct) { $img = 'Barbarian.png'; $className = 'Bárbaro'; }
+                        elseif ($luckPct > $skillPct && $luckPct > $energyPct && $luckPct > $enchantmentPct) { $img = 'Ranger.png'; $className = 'Patrulheiro'; }
+                        elseif ($enchantmentPct > $skillPct && $enchantmentPct > $energyPct && $enchantmentPct > $luckPct) { $img = 'Wizard.png'; $className = 'Bruxo'; }
+                    @endphp
+
+                    <div class="relative h-48 bg-slate-950">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-800 to-transparent z-10"></div>
+                        <img src="{{ asset('images/' . $img) }}" alt="Character" class="w-full h-full object-cover object-top opacity-90">
+                        <div class="absolute bottom-3 left-4 z-20">
+                            <div class="text-xs text-amber-500 font-bold uppercase tracking-wider mb-0.5">Herói Atual</div>
+                            <div class="text-2xl font-cinzel font-bold text-white">ID: {{$character->getId()}}</div>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex flex-col gap-4">
+
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-slate-400 uppercase font-bold">Habilidade</span>
+                                    <span class="text-slate-200">{{$character->getSkillCurrent()}} / {{$character->getSkillStart()}}</span>
+                                </div>
+                                <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                                    <div class="h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]" style="width: {{ $skillPct * 100 }}%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-slate-400 uppercase font-bold">Energia</span>
+                                    <span class="text-slate-200">{{$character->getEnergyCurrent()}} / {{$character->getEnergyStart()}}</span>
+                                </div>
+                                <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                                    <div class="h-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]" style="width: {{ $energyPct * 100 }}%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-slate-400 uppercase font-bold">Sorte</span>
+                                    <span class="text-slate-200">{{$character->getLuckCurrent()}} / {{$character->getLuckStart()}}</span>
+                                </div>
+                                <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                                    <div class="h-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]" style="width: {{ $luckPct * 100 }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mt-2 border-t border-slate-700 pt-4">
+                            <div class="bg-slate-900 rounded p-2 text-center border border-slate-700">
+                                <div class="text-amber-400 font-bold text-lg">{{$character->getGold()}}</div>
+                                <div class="text-[10px] text-slate-500 uppercase tracking-widest">Ouro</div>
+                            </div>
+                            <div class="bg-slate-900 rounded p-2 text-center border border-slate-700">
+                                <div class="text-purple-400 font-bold text-lg">{{$character->getEnchantmentStart()}}</div>
+                                <div class="text-[10px] text-slate-500 uppercase tracking-widest">Magia</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                {{-- <div class="mt-4 text-center">
+                    <span class="text-xs text-slate-500">Capítulo Atual: <span class="text-slate-300">{{$character->getCurrentStoryNode()}}</span></span>
+                </div> --}}
+
             </div>
         </div>
-        <input type="hidden" name="char_id" value="{{$character->getId()}}">
-        <input type="submit" value="Jogar">
-    </div>
-    <div class="right-side">
-        <img src="
-        @if ($character->getGold() >= 100)
-            {{ asset('images/Mingy.png') }}
-        @elseif ($skill == 0 && $energy == 0 && $luck == 0 && $enchantment == 0)
-            {{ asset('images/The Weak.png') }}
-        @elseif ($skill == 1 && $energy == 1 && $luck == 1 && $enchantment == 1)
-            {{ asset('images/Vitruvian.png') }}
-        @elseif ($skill == $energy && $skill == $luck && $skill == $enchantment)
-            {{ asset('images/Pilgrim.png') }}
-        @elseif ($skill == $energy && $skill == $luck && $skill > $enchantment)
-            {{ asset('images/Swashbuckler.png') }}
-        @elseif ($skill == $energy && $skill == $enchantment && $skill > $luck)
-            {{ asset('images/Paladin.png') }}
-        @elseif ($skill > $energy && $skill == $luck && $skill == $enchantment)
-            {{ asset('images/Artificer.png') }}
-        @elseif ($skill < $energy && $energy == $luck && $energy == $enchantment)
-            {{ asset('images/Xamã.png') }}
-        @elseif ($skill == $energy && $skill > $luck && $skill > $enchantment)
-            {{ asset('images/Monk.png') }}
-        @elseif ($skill == $luck && $skill > $energy && $skill > $enchantment)
-            {{ asset('images/Rogue.png') }}
-        @elseif ($skill == $enchantment && $skill > $energy && $skill > $luck)
-            {{ asset('images/Mage.png') }}
-        @elseif ($energy == $luck && $energy > $skill && $energy > $enchantment)
-            {{ asset('images/Druid.png') }}
-        @elseif ($energy == $enchantment && $energy > $skill && $energy > $luck)
-            {{ asset('images/Cleric.png') }}
-        @elseif ($luck == $enchantment && $luck > $skill && $luck > $energy)
-            {{ asset('images/Sorcerer.png') }}
-        @elseif ($skill > $energy && $skill > $luck && $skill > $enchantment)
-            {{ asset('images/Warrior.png') }}
-        @elseif ($energy > $skill && $energy > $luck && $energy > $enchantment)
-            {{ asset('images/Barbarian.png') }}
-        @elseif ($luck > $skill && $luck > $energy && $luck > $enchantment)
-            {{ asset('images/Ranger.png') }}
-        @elseif ($enchantment > $skill && $enchantment > $energy && $enchantment > $luck)
-            {{ asset('images/Wizard.png') }}
-        @endif
-        " alt="">
-    </div>
-</div>
+    </main>
+</body>
+</html>

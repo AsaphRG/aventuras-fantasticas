@@ -18,7 +18,9 @@ class HomeController extends Controller
         $playable_character = [];
 
         foreach($characters as $character) {
-            $playable_character[] = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id);
+            if(!($character->win || $character->dead)) {
+                $playable_character[] = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
+            }
         }
 
         return view('home', [

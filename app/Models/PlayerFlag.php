@@ -10,6 +10,8 @@ class PlayerFlag extends Model
 {
     use HasFactory;
 
+    protected $table = 'player_flag';
+
     protected $fillable = [
         'flag_name'
     ];

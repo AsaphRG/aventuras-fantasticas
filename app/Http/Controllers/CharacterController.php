@@ -12,7 +12,7 @@ class CharacterController extends Controller {
         $user = Auth::user();
         $stats = new PlayerLogic();
 
-        PlayerModel::create([
+        $newCharacter = PlayerModel::create([
             'user_id' => $user->id,
 
             'skillStart' => $stats->getSkillStart(),
@@ -23,9 +23,11 @@ class CharacterController extends Controller {
             'luckCurrent' => $stats->getLuckCurrent(),
             'enchantmentStart' => $stats->getEnchantmentStart(),
             'gold' => $stats->getGold(),
-            'currentChapter' => -1,
+            'currentStoryNode' => $stats->getCurrentStoryNode(),
+            'win' => $stats->getWin(),
+            'dead' => $stats->getDead(),
         ]);
 
-        return redirect(route('home'));
+        return redirect()->route('game', ['id' => $newCharacter->id]);
     }
 }

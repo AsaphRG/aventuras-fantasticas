@@ -1,5 +1,8 @@
 lógica de mágicas
+Filtro de escolhas que dependem de magia
 escolha de magias
-Controller de progressão
+Lógica de capítulos que incrementam atributos
+Lógica de itens possuídos, incluído itens mágicos que aumentam atributos
 Controller de batalhas
-criação de layout
+Registrar escolhas no banco de dados
+Criar o dashboard de personagens com história finalizada

@@ -1,3 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    .font-cinzel {
+        font-family: 'Cinzel', serif;
+    }
+}
+
+@layer components {
+    /* Botão padrão do estilo RPG */
+    .rpg-btn {
+        @apply px-4 py-2 border border-slate-600 rounded text-slate-300 text-sm hover:border-amber-500 hover:text-amber-500 transition-colors duration-200;
+    }
+
+    /* Botão de destaque (CTA) */
+    .rpg-btn-primary {
+        @apply px-6 py-2 bg-amber-600 text-white rounded font-bold shadow-lg hover:bg-amber-500 transition-all duration-200 border border-amber-400/20 hover:shadow-amber-500/20;
+    }
+}

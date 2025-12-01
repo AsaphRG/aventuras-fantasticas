@@ -13,6 +13,7 @@ use App\Http\Controllers\GameController;
 Route::get('/', [HomeController::class, 'home'])->name('home')->middleware('auth');
 Route::get('/new_character', [CharacterController::class, 'newCharacter'])->name('new_character')->middleware('auth');
 Route::get('/game/{id}', [GameController::class, 'game'])->name('game')->middleware('auth');
+Route::get('/nextChap/{id}', [GameController::class, 'nextChap'])->name('nextChap')->middleware('auth');
 Route::get('/stories', [GameController::class, 'stories'])->name('stories')->middleware('auth');
 
 Route::get('/dashboard', function () {
