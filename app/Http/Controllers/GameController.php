@@ -9,10 +9,23 @@ use App\Logic\Player as PlayerLogic;
 
 class GameController extends Controller
 {
-    public function stories(Request $request) {
-        $stories = StoryNode::all();
+    public function user_panel(Request $request) {
+        $user = $request->user();
 
-        return view('stories', ['stories' => $stories]);
+        $characters = $user->character->reverse();
+
+        $playable_character = [];
+
+        foreach($characters as $character) {
+            if(!($character->win || $character->dead)) {
+                $playable_character[] = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
+            }
+        }
+
+        return view('user_panel', [
+            'user' => $user,
+            'characters' => $playable_character
+        ]);
     }
 
     public function game(Request $request, int $character_id) {

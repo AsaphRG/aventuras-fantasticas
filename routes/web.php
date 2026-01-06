@@ -4,20 +4,22 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CharacterController;
+use App\Http\Controllers\EnchantmentController;
 use App\Http\Controllers\GameController;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 
-Route::get('/', [HomeController::class, 'home'])->name('home')->middleware('auth');
+Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/user_panel', [GameController::class, 'user_panel'])->name('user_panel')->middleware('auth');
 Route::get('/new_character', [CharacterController::class, 'newCharacter'])->name('new_character')->middleware('auth');
 Route::get('/game/{id}', [GameController::class, 'game'])->name('game')->middleware('auth');
+Route::get('/game/{id}/enchantments', [EnchantmentController::class, 'enchantmentChoice'])->name('enchantments')->middleware('auth');
 Route::get('/nextChap/{id}', [GameController::class, 'nextChap'])->name('nextChap')->middleware('auth');
-Route::get('/stories', [GameController::class, 'stories'])->name('stories')->middleware('auth');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboard', ['totalGames' => 0, 'totalWins' => 0, 'totalDeaths' => 0, 'winRate' => 0, 'heroes' => []]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

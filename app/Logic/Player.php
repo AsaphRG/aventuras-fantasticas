@@ -2,8 +2,6 @@
 
 namespace App\Logic;
 
-use function PHPUnit\Framework\isNull;
-
 class Player extends Fighter {
     protected int $gold;
     protected int $skillStart;
@@ -33,11 +31,11 @@ class Player extends Fighter {
      */
     public function __construct(?int $skillStart = null, ?int $skillCurrent = null, ?int $energyStart = null, ?int $energyCurrent = null, ?int $luckStart = null, ?int $luckCurrent = null, ?int $enchantment = null, int $gold = 0, int $currentStoryNode = 401, mixed $id = null, bool $win = False, bool $dead = False) {
         $skillStart = $skillStart ?? (rand(1, 6) + 6);
-        $skillCurrent = isNull($skillCurrent) ? $skillStart : $skillCurrent;
+        $skillCurrent = is_null($skillCurrent) ? $skillStart : $skillCurrent;
         $energyStart = $energyStart ?? (rand(1, 6) + rand(1, 6) + 12);
-        $energyCurrent = isNull($energyCurrent) ? $energyStart : $energyCurrent;
+        $energyCurrent = is_null($energyCurrent) ? $energyStart : $energyCurrent;
         $luckStart = $luckStart ?? (rand(1, 6) + 6);
-        $luckCurrent = isNull($luckCurrent) ? $luckStart : $luckCurrent;
+        $luckCurrent = is_null($luckCurrent) ? $luckStart : $luckCurrent;
         $enchantment = $enchantment ?? (rand(1, 6) + rand(1, 6) + 6);
 
         $this->skillStart = $skillStart;

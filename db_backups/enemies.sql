@@ -40,30 +40,30 @@ CREATE TABLE `enemies` (
 -- Despejando dados para a tabela `enemies`
 --
 
-INSERT INTO `enemies` (`id`, `name`, `ability`, `energy`, `created_at`, `updated_at`) VALUES
-(1, 'Gark', 7, 11, NULL, NULL),
-(2, 'Fera das garras', 9, 14, NULL, NULL),
-(3, 'Homem-Aranha', 7, 5, NULL, NULL),
-(4, 'Cobra de esgoto', 6, 7, NULL, NULL),
-(5, 'Gárgula', 9, 10, NULL, NULL),
-(6, 'Gark', 5, 5, NULL, NULL),
-(7, 'Macaco-Cachorro', 7, 4, NULL, NULL),
-(8, 'Cachorro-Macaco', 6, 6, NULL, NULL),
-(9, 'Golem', 8, 10, NULL, NULL),
-(10, 'Homem alto', 8, 8, NULL, NULL),
-(11, 'Homem baixo', 7, 6, NULL, NULL),
-(12, 'Anão', 5, 6, NULL, NULL),
-(13, 'Goblin', 6, 4, NULL, NULL),
-(14, 'Orca', 7, 5, NULL, NULL),
-(15, 'Primeiro Gira', 7, 6, NULL, NULL),
-(16, 'Segundo Gira', 6, 5, NULL, NULL),
-(17, 'Calacorm', 9, 8, NULL, NULL),
-(18, 'Homem-Rino', 8, 9, NULL, NULL),
-(19, 'Elfo negro', 8, 4, NULL, NULL),
-(20, 'Homem-Rino', 4, 7, NULL, NULL),
-(21, 'Balthusdire', 12, 19, NULL, NULL),
-(22, 'Hidra', 10, 17, NULL, NULL),
-(23, 'Elfo negro', 4, 4, NULL, NULL);
+INSERT INTO `enemies` (`id`, `name`, `ability`, `energy`) VALUES
+(1, 'Gark', 7, 11),
+(2, 'Fera das garras', 9, 14),
+(3, 'Homem-Aranha', 7, 5),
+(4, 'Cobra de esgoto', 6, 7),
+(5, 'Gárgula', 9, 10),
+(6, 'Gark', 5, 5),
+(7, 'Macaco-Cachorro', 7, 4),
+(8, 'Cachorro-Macaco', 6, 6),
+(9, 'Golem', 8, 10),
+(10, 'Homem alto', 8, 8),
+(11, 'Homem baixo', 7, 6),
+(12, 'Anão', 5, 6),
+(13, 'Goblin', 6, 4),
+(14, 'Orca', 7, 5),
+(15, 'Primeiro Gira', 7, 6),
+(16, 'Segundo Gira', 6, 5),
+(17, 'Calacorm', 9, 8),
+(18, 'Homem-Rino', 8, 9),
+(19, 'Elfo negro', 8, 4),
+(20, 'Homem-Rino', 4, 7),
+(21, 'Balthusdire', 12, 19),
+(22, 'Hidra', 10, 17),
+(23, 'Elfo negro', 4, 4);
 
 --
 -- Índices para tabelas despejadas
