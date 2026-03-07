@@ -80,6 +80,12 @@
                     elseif ($energyPct > $skillPct && $energyPct > $luckPct && $energyPct > $enchantmentPct) { $img = 'Barbarian.png'; $className = 'Bárbaro'; }
                     elseif ($luckPct > $skillPct && $luckPct > $energyPct && $luckPct > $enchantmentPct) { $img = 'Ranger.png'; $className = 'Patrulheiro'; }
                     elseif ($enchantmentPct > $skillPct && $enchantmentPct > $energyPct && $enchantmentPct > $luckPct) { $img = 'Wizard.png'; $className = 'Bruxo'; }
+
+
+                    $skillPct = $character->getSkillCurrent() / $character->getSkillStart();
+                    $energyPct = $character->getEnergyCurrent() / $character->getEnergyStart();
+                    $luckPct = $character->getLuckCurrent() / $character->getLuckStart();
+                    $enchantmentPct = $character->getEnchantmentCurrent() / $character->getEnchantmentStart();
                 @endphp
 
                 <div class="group relative bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-amber-500 transition-all duration-300 hover:shadow-xl hover:shadow-amber-900/20 flex flex-col">
@@ -128,7 +134,7 @@
 
                             <div class="stat-group">
                                 <div class="flex justify-between mb-1">
-                                    <span class="text-slate-400">Magia</span>
+                                    <span class="text-slate-400">Magias</span>
                                     <span class="text-slate-200 font-mono">{{$character->getEnchantmentStart()}}</span>
                                 </div>
                                 <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">

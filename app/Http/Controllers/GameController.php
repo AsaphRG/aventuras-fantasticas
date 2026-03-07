@@ -9,7 +9,7 @@ use App\Logic\Player as PlayerLogic;
 
 class GameController extends Controller
 {
-    public function user_panel(Request $request) {
+    public function adventure_choice(Request $request) {
         $user = $request->user();
 
         $characters = $user->character->reverse();
@@ -22,7 +22,7 @@ class GameController extends Controller
             }
         }
 
-        return view('user_panel', [
+        return view('adventure_choice', [
             'user' => $user,
             'characters' => $playable_character
         ]);

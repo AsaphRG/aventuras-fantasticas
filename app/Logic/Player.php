@@ -64,6 +64,7 @@ class Player extends Fighter {
     public function getLuckCurrent():int {return $this->luckCurrent;}
 
     public function getEnchantmentStart():int {return $this->enchantmentStart;}
+    public function getEnchantmentCurrent():int {return count($this->enchantments);}
 
     public function getGold():int {return $this->gold;}
     public function increaseGold(int $value):void {$this->gold += $value;}

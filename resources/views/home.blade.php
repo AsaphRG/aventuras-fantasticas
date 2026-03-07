@@ -37,7 +37,7 @@
             @if (Route::has('login'))
                 <nav class="flex items-center gap-6">
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="font-cinzel text-amber-400 hover:text-amber-300 transition">Continuar Aventura →</a>
+                        <a href="{{ url('/adventure_choice') }}" class="font-cinzel text-amber-400 hover:text-amber-300 transition">Continuar Aventura →</a>
                     @else
                         <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-300 hover:text-white transition uppercase tracking-wide">Login</a>
                         @if (Route::has('register'))
@@ -70,7 +70,7 @@
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
                 @auth
-                    <a href="{{ url('/game') }}" class="w-full sm:w-auto px-8 py-4 bg-amber-600 hover:bg-amber-500 text-white font-cinzel font-bold text-lg rounded shadow-[0_0_20px_rgba(217,119,6,0.3)] hover:shadow-[0_0_30px_rgba(217,119,6,0.6)] transition-all border border-amber-400/30 transform hover:-translate-y-1">
+                    <a href="{{ url('/user_panel') }}" class="w-full sm:w-auto px-8 py-4 bg-amber-600 hover:bg-amber-500 text-white font-cinzel font-bold text-lg rounded shadow-[0_0_20px_rgba(217,119,6,0.3)] hover:shadow-[0_0_30px_rgba(217,119,6,0.6)] transition-all border border-amber-400/30 transform hover:-translate-y-1">
                         Retomar Jornada
                     </a>
                 @else

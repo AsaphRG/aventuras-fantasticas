@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('user_panel', absolute: false));
+        return redirect()->intended(route('adventure_choice', absolute: false));
     }
 
     /**

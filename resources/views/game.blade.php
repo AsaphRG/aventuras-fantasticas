@@ -18,7 +18,7 @@
             </div>
 
             <nav class="flex items-center gap-4">
-                <a href="{{ url('/') }}" class="text-slate-400 hover:text-amber-500 transition text-sm">Sair do Jogo</a>
+                <a href="{{ url('/user_panel') }}" class="text-slate-400 hover:text-amber-500 transition text-sm">Sair da história</a>
             </nav>
         </div>
     </header>

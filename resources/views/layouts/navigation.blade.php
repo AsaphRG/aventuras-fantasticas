@@ -3,7 +3,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="group">
+                    <a href="{{ route('adventure_choice') }}" class="group">
                         <h1 class="font-cinzel text-xl font-bold text-amber-500 tracking-widest group-hover:text-amber-400 group-hover:scale-105 transition-all duration-300 flex items-center gap-2">
                             <span>⚔️</span>
                         </h1>

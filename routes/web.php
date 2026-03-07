@@ -12,7 +12,7 @@ use App\Http\Controllers\GameController;
 // });
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/user_panel', [GameController::class, 'user_panel'])->name('user_panel')->middleware('auth');
+Route::get('/adventure_choice', [GameController::class, 'adventure_choice'])->name('adventure_choice')->middleware('auth');
 Route::get('/new_character', [CharacterController::class, 'newCharacter'])->name('new_character')->middleware('auth');
 Route::get('/game/{id}', [GameController::class, 'game'])->name('game')->middleware('auth');
 Route::get('/game/{id}/enchantments', [EnchantmentController::class, 'enchantmentChoice'])->name('enchantments')->middleware('auth');
