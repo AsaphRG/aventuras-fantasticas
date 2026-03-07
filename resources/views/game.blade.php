@@ -18,7 +18,7 @@
             </div>
 
             <nav class="flex items-center gap-4">
-                <a href="{{ url('/user_panel') }}" class="text-slate-400 hover:text-amber-500 transition text-sm">Sair da história</a>
+                <a href="{{ url('/adventure_choice') }}" class="text-slate-400 hover:text-amber-500 transition text-sm">Sair da história</a>
             </nav>
         </div>
     </header>
@@ -103,6 +103,11 @@
                         elseif ($energyPct > $skillPct && $energyPct > $luckPct && $energyPct > $enchantmentPct) { $img = 'Barbarian.png'; $className = 'Bárbaro'; }
                         elseif ($luckPct > $skillPct && $luckPct > $energyPct && $luckPct > $enchantmentPct) { $img = 'Ranger.png'; $className = 'Patrulheiro'; }
                         elseif ($enchantmentPct > $skillPct && $enchantmentPct > $energyPct && $enchantmentPct > $luckPct) { $img = 'Wizard.png'; $className = 'Bruxo'; }
+
+                        $skillPct = $character->getSkillCurrent() / $character->getSkillStart();
+                        $energyPct = $character->getEnergyCurrent() / $character->getEnergyStart();
+                        $luckPct = $character->getLuckCurrent() / $character->getLuckStart();
+                        $enchantmentPct = $character->getEnchantmentCurrent() / $character->getEnchantmentStart();
                     @endphp
 
                     <div class="relative h-48 bg-slate-950">
