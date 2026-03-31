@@ -37,6 +37,10 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        <x-dropdown-link :href="route('dashboard')" class="text-slate-300 hover:bg-slate-700 hover:text-amber-500">
+                            {{ __('Salão dos Heróis') }}
+                        </x-dropdown-link>
+
                         <x-dropdown-link :href="route('profile.edit')" class="text-slate-300 hover:bg-slate-700 hover:text-amber-500">
                             {{ __('Perfil') }}
                         </x-dropdown-link>
