@@ -6,10 +6,11 @@ use App\Models\StoryNode;
 use App\Models\Choice;
 use Illuminate\Http\Request;
 use App\Logic\Player as PlayerLogic;
+use App\Models\PlayerEnchantments;
 
 class GameController extends Controller
 {
-    public function adventure_choice(Request $request) {
+    public function adventureChoice(Request $request) {
         $user = $request->user();
 
         $characters = $user->character->reverse();
@@ -18,7 +19,14 @@ class GameController extends Controller
 
         foreach($characters as $character) {
             if(!($character->win || $character->dead)) {
-                $playable_character[] = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
+
+                $enchantments = $character->enchantments;
+
+                $playable_instance = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
+
+                $playable_instance->createGrimory($enchantments);
+
+                $playable_character[] = $playable_instance;
             }
         }
 
@@ -33,7 +41,11 @@ class GameController extends Controller
 
         $character = $user->character()->findOrFail($character_id);
 
+        $enchantments = $character->enchantments;
+
         $playable_character = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
+
+        $playable_character->createGrimory($enchantments);
 
         $character_flags = $character->flags->pluck('flag_name')->toArray();
 

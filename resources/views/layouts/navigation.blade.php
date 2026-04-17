@@ -13,7 +13,7 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
                         class="font-cinzel text-slate-300 hover:text-amber-500 hover:border-amber-500 focus:text-amber-500 active:text-amber-500 transition-colors duration-200">
-                        {{ __('Salão dos Heróis') }}
+                        {{ __('Heroes\' Hall') }}
                     </x-nav-link>
                     <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')"
                         class="font-cinzel text-slate-300 hover:text-amber-500 hover:border-amber-500 focus:text-amber-500 active:text-amber-500 transition-colors duration-200">
@@ -38,11 +38,11 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('dashboard')" class="text-slate-300 hover:bg-slate-700 hover:text-amber-500">
-                            {{ __('Salão dos Heróis') }}
+                            {{ __('Heroes\' Hall') }}
                         </x-dropdown-link>
 
                         <x-dropdown-link :href="route('profile.edit')" class="text-slate-300 hover:bg-slate-700 hover:text-amber-500">
-                            {{ __('Perfil') }}
+                            {{ __('Profile') }}
                         </x-dropdown-link>
 
                         <form method="POST" action="{{ route('logout') }}">
@@ -52,7 +52,7 @@
                                     class="text-slate-300 hover:bg-slate-700 hover:text-amber-500"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Sair') }}
+                                {{ __('Logout') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -74,7 +74,7 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
                 class="text-slate-300 hover:text-amber-500 hover:bg-slate-800 hover:border-amber-500 font-cinzel">
-                {{ __('Salão dos Heróis') }}
+                {{ __('Heroes\' Hall') }}
             </x-responsive-nav-link>
         </div>
 
@@ -86,7 +86,7 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')" class="text-slate-400 hover:text-amber-500 hover:bg-slate-800">
-                    {{ __('Perfil') }}
+                    {{ __('Profile') }}
                 </x-responsive-nav-link>
 
                 <form method="POST" action="{{ route('logout') }}">
@@ -96,7 +96,7 @@
                             class="text-slate-400 hover:text-amber-500 hover:bg-slate-800"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        {{ __('Sair') }}
+                        {{ __('Logout') }}
                     </x-responsive-nav-link>
                 </form>
             </div>

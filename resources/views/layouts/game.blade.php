@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite(['resources/js/app.js', 'resources/css/app.css'])
-    <title>{{ config('app.name', 'Cidadela do Caos') }} - @yield('title', 'Jogando')</title>
+    <title>{{ config('app.name', 'Cidadela do Caos') }} - @yield('title', __('Playing'))</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
@@ -21,7 +21,7 @@
                 @if (\View::hasSection('header-nav'))
                     @yield('header-nav')
                 @else
-                    <a href="{{ url('/adventure_choice') }}" class="text-slate-400 hover:text-amber-500 transition text-sm">Sair da história</a>
+                    <a href="{{ url('/adventure_choice') }}" class="text-slate-400 hover:text-amber-500 transition text-sm">{{ __('Exit Story') }}</a>
                 @endif
             </nav>
         </div>

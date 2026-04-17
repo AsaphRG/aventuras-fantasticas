@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Logic;
+use Illuminate\Support\Collection;
+
+use function is_null;
 
 class Player extends Fighter {
     protected int $gold;
@@ -9,8 +12,8 @@ class Player extends Fighter {
     protected int $luckStart;
     protected int $luckCurrent;
     protected int $enchantmentStart;
-    protected array $items;
-    protected array $enchantments;
+    protected Collection $items;
+    protected Collection $enchantments;
     protected int $currentStoryNode;
     protected mixed $id;
     protected bool $win;
@@ -46,8 +49,8 @@ class Player extends Fighter {
         $this->luckCurrent = $luckCurrent;
         $this->enchantmentStart = $enchantment;
         $this->gold = $gold;
-        $this->items = [];
-        $this->enchantments = [];
+        $this->items = collect([]);
+        $this->enchantments = collect([]);
         $this->currentStoryNode = $currentStoryNode;
         $this->id = $id;
         $this->win = $win;
@@ -64,7 +67,7 @@ class Player extends Fighter {
     public function getLuckCurrent():int {return $this->luckCurrent;}
 
     public function getEnchantmentStart():int {return $this->enchantmentStart;}
-    public function getEnchantmentCurrent():int {return count($this->enchantments);}
+    public function getEnchantmentCurrent():int {return $this->enchantments->where('used', false)->count();}
 
     public function getGold():int {return $this->gold;}
     public function increaseGold(int $value):void {$this->gold += $value;}
@@ -109,8 +112,8 @@ class Player extends Fighter {
         }
     }
 
-    public function createGrimory(array $enchantments):void {
-        if(empty($this->enchantments)) {
+    public function createGrimory(Collection|null $enchantments):void {
+        if(!is_null($enchantments)) {
             $this->enchantments = $enchantments;
         }
     }

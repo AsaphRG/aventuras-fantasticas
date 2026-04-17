@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite(['resources/js/app.js', 'resources/css/app.css'])
-    <title>{{ config('app.name', 'Laravel RPG') }} - Início</title>
+    <title>{{ config('app.name', 'Laravel RPG') }} - {{ __('Home') }}</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -37,12 +37,12 @@
             @if (Route::has('login'))
                 <nav class="flex items-center gap-6">
                     @auth
-                        <a href="{{ url('/adventure_choice') }}" class="font-cinzel text-amber-400 hover:text-amber-300 transition">Continuar Aventura →</a>
+                        <a href="{{ url('/adventure_choice') }}" class="font-cinzel text-amber-400 hover:text-amber-300 transition">{{ __('Continue Adventure') }} →</a>
                     @else
                         <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-300 hover:text-white transition uppercase tracking-wide">Login</a>
                         @if (Route::has('register'))
                             <a href="{{ route('register') }}" class="px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold rounded shadow-lg shadow-amber-900/50 transition-all hover:scale-105 border border-amber-400/30 uppercase tracking-wider">
-                                Criar Conta
+                                {{ __('Create Account') }}
                             </a>
                         @endif
                     @endauth
@@ -57,7 +57,7 @@
 
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-900/30 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-[0.2em] mb-4">
                 <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                Alpha Version
+                {{ __('Alpha Version') }}
             </div>
 
             <h1 class="font-cinzel text-5xl md:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-200 via-amber-500 to-amber-700 drop-shadow-sm animate-float">
@@ -65,20 +65,20 @@
             </h1>
 
             <p class="text-lg md:text-2xl text-slate-400 font-light max-w-2xl mx-auto leading-relaxed">
-                Escolha seu caminho, enfrente seus demônios e forje seu destino em um mundo onde cada <span class="text-amber-500 font-semibold">escolha</span> define sua sobrevivência.
+                {{ __('Choose your path, face your demons and forge your destiny in a world where each choice defines your survival.') }}
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
                 @auth
                     <a href="{{ url('/user_panel') }}" class="w-full sm:w-auto px-8 py-4 bg-amber-600 hover:bg-amber-500 text-white font-cinzel font-bold text-lg rounded shadow-[0_0_20px_rgba(217,119,6,0.3)] hover:shadow-[0_0_30px_rgba(217,119,6,0.6)] transition-all border border-amber-400/30 transform hover:-translate-y-1">
-                        Retomar Jornada
+                        {{ __('Resume Journey') }}
                     </a>
                 @else
                     <a href="{{ route('register') }}" class="w-full sm:w-auto px-8 py-4 bg-amber-600 hover:bg-amber-500 text-white font-cinzel font-bold text-lg rounded shadow-[0_0_20px_rgba(217,119,6,0.3)] hover:shadow-[0_0_30px_rgba(217,119,6,0.6)] transition-all border border-amber-400/30 transform hover:-translate-y-1">
-                        Começar Aventura
+                        {{ __('Start Adventure') }}
                     </a>
                     <a href="#features" class="w-full sm:w-auto px-8 py-4 bg-transparent hover:bg-slate-800 text-slate-300 font-cinzel font-bold text-lg rounded border border-slate-600 hover:border-slate-400 transition-all">
-                        Saiba Mais
+                        {{ __('Learn More') }}
                     </a>
                 @endauth
             </div>
@@ -88,20 +88,20 @@
 
             <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-800 hover:border-amber-500/50 transition duration-300 backdrop-blur-sm group">
                 <div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition">🎲</div>
-                <h3 class="font-cinzel text-xl text-amber-500 font-bold mb-2">RPG Textual</h3>
-                <p class="text-slate-400 text-sm leading-relaxed">Uma narrativa profunda onde sua imaginação é o melhor gráfico. Reviva a era de ouro dos jogos de texto com mecânicas modernas.</p>
+                <h3 class="font-cinzel text-xl text-amber-500 font-bold mb-2">{{ __('Textual RPG') }}</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">{{ __('A deep narrative where your imagination is the best graphic. Relive the golden age of text games with modern mechanics.') }}</p>
             </div>
 
             <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-800 hover:border-amber-500/50 transition duration-300 backdrop-blur-sm group">
                 <div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition">⚔️</div>
-                <h3 class="font-cinzel text-xl text-amber-500 font-bold mb-2">Combate & Atributos</h3>
-                <p class="text-slate-400 text-sm leading-relaxed">Gerencie Habilidade, Energia e Sorte. Cada batalha é calculada, cada item encontrado pode ser a diferença entre a vida e a morte.</p>
+                <h3 class="font-cinzel text-xl text-amber-500 font-bold mb-2">{{ __('Combat & Attributes') }}</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">{{ __('Manage Skill, Energy and Luck. Each battle is calculated, each item found can be the difference between life and death.') }}</p>
             </div>
 
             <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-800 hover:border-amber-500/50 transition duration-300 backdrop-blur-sm group">
                 <div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition">👑</div>
-                <h3 class="font-cinzel text-xl text-amber-500 font-bold mb-2">Consequências Reais</h3>
-                <p class="text-slate-400 text-sm leading-relaxed">Suas escolhas alteram o rumo da história. Desbloqueie conquistas, encontre finais secretos e torne-se uma lenda.</p>
+                <h3 class="font-cinzel text-xl text-amber-500 font-bold mb-2">{{ __('Real Consequences') }}</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">{{ __('Your choices change the course of the story. Unlock achievements, find secret endings and become a legend.') }}</p>
             </div>
 
         </div>
@@ -111,10 +111,10 @@
     <footer class="relative z-10 w-full border-t border-slate-800 bg-slate-950 py-8">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <p class="text-slate-500 text-sm mb-2">
-                Desenvolvido com <span class="text-red-500">❤</span> e <strong>Laravel</strong>.
+                {{ __('Developed with') }} <span class="text-red-500">❤</span> {{ __('and') }} <strong>Laravel</strong>.
             </p>
             <p class="text-slate-600 text-xs">
-                © {{ date('Y') }} {{ config('app.name') }}. Todos os direitos reservados aos dados, mas o código é livre para aprendizado.
+                © {{ date('Y') }} {{ config('app.name') }}. {{ __('All rights reserved to data, but code is free for learning.') }}
             </p>
         </div>
     </footer>

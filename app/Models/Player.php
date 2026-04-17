@@ -44,7 +44,7 @@ class Player extends Model
 
     public function enchantments(): HasMany
     {
-        return $this->hasMany(Enchantment::class);
+        return $this->hasMany(PlayerEnchantments::class);
     }
 
     public function storyNode(): BelongsTo

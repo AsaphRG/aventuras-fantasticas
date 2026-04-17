@@ -28,6 +28,6 @@ class CharacterController extends Controller {
             'dead' => $stats->getDead(),
         ]);
 
-        return redirect()->route('game', ['id' => $newCharacter->id]);
+        return redirect()->route('enchantment_choice', ['id' => $newCharacter->id]);
     }
 }

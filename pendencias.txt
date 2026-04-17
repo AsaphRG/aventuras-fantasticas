@@ -1,6 +1,5 @@
 lógica de mágicas
 Filtro de escolhas que dependem de magia
-escolha de magias
 Lógica de capítulos que incrementam atributos
 Lógica de itens possuídos, incluído itens mágicos que aumentam atributos
 Controller de batalhas

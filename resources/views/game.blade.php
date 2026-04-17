@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Aventura')
+@section('title', __('Adventure'))
 
 @section('sidebar')
     <div class="bg-slate-800 rounded-xl overflow-hidden border border-slate-600 shadow-2xl">
@@ -14,27 +14,27 @@
 
             // Lógica de Imagem
             $img = 'Mingy.png';
-            $className = 'Aventureiro';
+            $className = 'Unknown';
 
-            // (Sua lógica de ifs gigantesca aqui - Simplifiquei para o exemplo, mas use a sua completa)
-            if ($character->getGold() >= 100) { $img = 'Mingy.png'; $className = 'Rico'; }
-            elseif ($skillPct == 0 && $energyPct == 0 && $luckPct == 0 && $enchantmentPct == 0) { $img = 'The Weak.png'; $className = 'Fraco'; }
-            elseif ($skillPct == 1 && $energyPct == 1 && $luckPct == 1 && $enchantmentPct == 1) { $img = 'Vitruvian.png'; $className = 'Perfeito'; }
-            elseif ($skillPct == $energyPct && $skillPct == $luckPct && $skillPct == $enchantmentPct) { $img = 'Pilgrim.png'; $className = 'Peregrino'; }
-            elseif ($skillPct == $energyPct && $skillPct == $luckPct && $skillPct > $enchantmentPct) { $img = 'Swashbuckler.png'; $className = 'Espadachim'; }
-            elseif ($skillPct == $energyPct && $skillPct == $enchantmentPct && $skillPct > $luckPct) { $img = 'Paladin.png'; $className = 'Paladino'; }
-            elseif ($skillPct > $energyPct && $skillPct == $luckPct && $skillPct == $enchantmentPct) { $img = 'Artificer.png'; $className = 'Artífice'; }
-            elseif ($skillPct < $energyPct && $energyPct == $luckPct && $energyPct == $enchantmentPct) { $img = 'Xamã.png'; $className = 'Xamã'; }
-            elseif ($skillPct == $energyPct && $skillPct > $luckPct && $skillPct > $enchantmentPct) { $img = 'Monk.png'; $className = 'Monge'; }
-            elseif ($skillPct == $luckPct && $skillPct > $energyPct && $skillPct > $enchantmentPct) { $img = 'Rogue.png'; $className = 'Ladino'; }
-            elseif ($skillPct == $enchantmentPct && $skillPct > $energyPct && $skillPct > $luckPct) { $img = 'Mage.png'; $className = 'Mago'; }
-            elseif ($energyPct == $luckPct && $energyPct > $skillPct && $energyPct > $enchantmentPct) { $img = 'Druid.png'; $className = 'Druida'; }
-            elseif ($energyPct == $enchantmentPct && $energyPct > $skillPct && $energyPct > $luckPct) { $img = 'Cleric.png'; $className = 'Clérigo'; }
-            elseif ($luckPct == $enchantmentPct && $luckPct > $skillPct && $luckPct > $energyPct) { $img = 'Sorcerer.png'; $className = 'Feiticeiro'; }
-            elseif ($skillPct > $energyPct && $skillPct > $luckPct && $skillPct > $enchantmentPct) { $img = 'Warrior.png'; $className = 'Guerreiro'; }
-            elseif ($energyPct > $skillPct && $energyPct > $luckPct && $energyPct > $enchantmentPct) { $img = 'Barbarian.png'; $className = 'Bárbaro'; }
-            elseif ($luckPct > $skillPct && $luckPct > $energyPct && $luckPct > $enchantmentPct) { $img = 'Ranger.png'; $className = 'Patrulheiro'; }
-            elseif ($enchantmentPct > $skillPct && $enchantmentPct > $energyPct && $enchantmentPct > $luckPct) { $img = 'Wizard.png'; $className = 'Bruxo'; }
+            // (Sua lógica de ifs completa)
+            if ($character->getGold() >= 100) { $img = 'Mingy.png'; $className = 'Rich'; }
+            elseif ($skillPct == 0 && $energyPct == 0 && $luckPct == 0 && $enchantmentPct == 0) { $img = 'The Weak.png'; $className = 'Weak'; }
+            elseif ($skillPct == 1 && $energyPct == 1 && $luckPct == 1 && $enchantmentPct == 1) { $img = 'Vitruvian.png'; $className = 'Perfect'; }
+            elseif ($skillPct == $energyPct && $skillPct == $luckPct && $skillPct == $enchantmentPct) { $img = 'Pilgrim.png'; $className = 'Pilgrim'; }
+            elseif ($skillPct == $energyPct && $skillPct == $luckPct && $skillPct > $enchantmentPct) { $img = 'Swashbuckler.png'; $className = 'Swashbuckler'; }
+            elseif ($skillPct == $energyPct && $skillPct == $enchantmentPct && $skillPct > $luckPct) { $img = 'Paladin.png'; $className = 'Paladin'; }
+            elseif ($skillPct > $energyPct && $skillPct == $luckPct && $skillPct == $enchantmentPct) { $img = 'Artificer.png'; $className = 'Artificer'; }
+            elseif ($skillPct < $energyPct && $energyPct == $luckPct && $energyPct == $enchantmentPct) { $img = 'Xamã.png'; $className = 'Shaman'; }
+            elseif ($skillPct == $energyPct && $skillPct > $luckPct && $skillPct > $enchantmentPct) { $img = 'Monk.png'; $className = 'Monk'; }
+            elseif ($skillPct == $luckPct && $skillPct > $energyPct && $skillPct > $enchantmentPct) { $img = 'Rogue.png'; $className = 'Rogue'; }
+            elseif ($skillPct == $enchantmentPct && $skillPct > $energyPct && $skillPct > $luckPct) { $img = 'Mage.png'; $className = 'Mage'; }
+            elseif ($energyPct == $luckPct && $energyPct > $skillPct && $energyPct > $enchantmentPct) { $img = 'Druid.png'; $className = 'Druid'; }
+            elseif ($energyPct == $enchantmentPct && $energyPct > $skillPct && $energyPct > $luckPct) { $img = 'Cleric.png'; $className = 'Cleric'; }
+            elseif ($luckPct == $enchantmentPct && $luckPct > $skillPct && $luckPct > $energyPct) { $img = 'Sorcerer.png'; $className = 'Sorcerer'; }
+            elseif ($skillPct > $energyPct && $skillPct > $luckPct && $skillPct > $enchantmentPct) { $img = 'Warrior.png'; $className = 'Warrior'; }
+            elseif ($energyPct > $skillPct && $energyPct > $luckPct && $energyPct > $enchantmentPct) { $img = 'Barbarian.png'; $className = 'Barbarian'; }
+            elseif ($luckPct > $skillPct && $luckPct > $energyPct && $luckPct > $enchantmentPct) { $img = 'Ranger.png'; $className = 'Ranger'; }
+            elseif ($enchantmentPct > $skillPct && $enchantmentPct > $energyPct && $enchantmentPct > $luckPct) { $img = 'Wizard.png'; $className = 'Wizard'; }
 
             $skillPct = $character->getSkillCurrent() / $character->getSkillStart();
             $energyPct = $character->getEnergyCurrent() / $character->getEnergyStart();
@@ -44,9 +44,9 @@
 
         <div class="relative h-48 bg-slate-950">
             <div class="absolute inset-0 bg-gradient-to-t from-slate-800 to-transparent z-10"></div>
-            <img src="{{ asset('images/' . $img) }}" alt="Character" class="w-full h-full object-cover object-top opacity-90">
+            <img src="{{ asset('images/' . $img) }}" alt="{{ __($className) }}" class="w-full h-full object-cover object-top opacity-90">
             <div class="absolute bottom-3 left-4 z-20">
-                <div class="text-xs text-amber-500 font-bold uppercase tracking-wider mb-0.5">Herói Atual</div>
+                <div class="text-xs text-amber-500 font-bold uppercase tracking-wider mb-0.5">{{ __('Current Hero') }}</div>
                 <div class="text-2xl font-cinzel font-bold text-white">ID: {{$character->getId()}}</div>
             </div>
         </div>
@@ -56,7 +56,7 @@
             <div class="space-y-4">
                 <div>
                     <div class="flex justify-between text-xs mb-1">
-                        <span class="text-slate-400 uppercase font-bold">Habilidade</span>
+                        <span class="text-slate-400 uppercase font-bold">{{ __('Skill') }}</span>
                         <span class="text-slate-200">{{$character->getSkillCurrent()}} / {{$character->getSkillStart()}}</span>
                     </div>
                     <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
@@ -66,7 +66,7 @@
 
                 <div>
                     <div class="flex justify-between text-xs mb-1">
-                        <span class="text-slate-400 uppercase font-bold">Energia</span>
+                        <span class="text-slate-400 uppercase font-bold">{{ __('Energy') }}</span>
                         <span class="text-slate-200">{{$character->getEnergyCurrent()}} / {{$character->getEnergyStart()}}</span>
                     </div>
                     <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
@@ -76,7 +76,7 @@
 
                 <div>
                     <div class="flex justify-between text-xs mb-1">
-                        <span class="text-slate-400 uppercase font-bold">Sorte</span>
+                        <span class="text-slate-400 uppercase font-bold">{{ __('Luck') }}</span>
                         <span class="text-slate-200">{{$character->getLuckCurrent()}} / {{$character->getLuckStart()}}</span>
                     </div>
                     <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
@@ -88,11 +88,11 @@
             <div class="grid grid-cols-2 gap-3 mt-2 border-t border-slate-700 pt-4">
                 <div class="bg-slate-900 rounded p-2 text-center border border-slate-700">
                     <div class="text-amber-400 font-bold text-lg">{{$character->getGold()}}</div>
-                    <div class="text-[10px] text-slate-500 uppercase tracking-widest">Ouro</div>
+                    <div class="text-[10px] text-slate-500 uppercase tracking-widest">{{ __('Gold') }}</div>
                 </div>
                 <div class="bg-slate-900 rounded p-2 text-center border border-slate-700">
-                    <div class="text-purple-400 font-bold text-lg">{{$character->getEnchantmentStart()}}</div>
-                    <div class="text-[10px] text-slate-500 uppercase tracking-widest">Magia</div>
+                    <div class="text-purple-400 font-bold text-lg">{{$character->getEnchantmentCurrent()}}</div>
+                    <div class="text-[10px] text-slate-500 uppercase tracking-widest">{{ __('Spells') }}</div>
                 </div>
             </div>
 
@@ -114,7 +114,7 @@
     </div>
 
     <div class="flex flex-col gap-3">
-        <h3 class="text-slate-400 font-cinzel text-sm uppercase tracking-widest mb-2 ml-1">O que você vai fazer?</h3>
+        <h3 class="text-slate-400 font-cinzel text-sm uppercase tracking-widest mb-2 ml-1">{{ __('What are you going to do?') }}</h3>
 
         @foreach ($choices as $choice)
             @php

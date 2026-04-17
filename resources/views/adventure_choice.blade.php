@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Escolha seu Herói')
+@section('title', __('Choose your Hero'))
 
 @section('header-nav')
     @if (Route::has('login'))
@@ -21,11 +21,11 @@
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('dashboard')" class="text-slate-300 hover:bg-slate-700 hover:text-amber-500">
-                                {{ __('Salão dos Heróis') }}
+                                {{ __('Heroes\' Hall') }}
                             </x-dropdown-link>
 
                             <x-dropdown-link :href="route('profile.edit')" class="text-slate-300 hover:bg-slate-700 hover:text-amber-500">
-                                {{ __('Perfil') }}
+                                {{ __('Profile') }}
                             </x-dropdown-link>
 
                             <form method="POST" action="{{ route('logout') }}">
@@ -35,7 +35,7 @@
                                         class="text-slate-300 hover:bg-slate-700 hover:text-amber-500"
                                         onclick="event.preventDefault();
                                                     this.closest('form').submit();">
-                                    {{ __('Sair') }}
+                                    {{ __('Logout') }}
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
@@ -57,7 +57,7 @@
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
                     class="text-slate-300 hover:text-amber-500 hover:bg-slate-800 hover:border-amber-500 font-cinzel">
-                    {{ __('Salão dos Heróis') }}
+                    {{ __('Heroes\' Hall') }}
                 </x-responsive-nav-link>
             </div>
 
@@ -69,7 +69,7 @@
 
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')" class="text-slate-400 hover:text-amber-500 hover:bg-slate-800">
-                        {{ __('Perfil') }}
+                        {{ __('Profile') }}
                     </x-responsive-nav-link>
 
                     <form method="POST" action="{{ route('logout') }}">
@@ -79,7 +79,7 @@
                                 class="text-slate-400 hover:text-amber-500 hover:bg-slate-800"
                                 onclick="event.preventDefault();
                                             this.closest('form').submit();">
-                            {{ __('Sair') }}
+                            {{ __('Logout') }}
                         </x-responsive-nav-link>
                     </form>
                 </div>
@@ -95,17 +95,17 @@
 
 @section('content')
     <div class="bg-amber-900/20 border-l-4 border-amber-500 text-amber-200 p-4 mb-8 rounded-r shadow-md" role="alert">
-        <p class="font-bold text-sm uppercase tracking-wide">Modo de Desenvolvimento</p>
-        <p class="text-sm">Este é um projeto focado em aprendizado e não tem finalidades comerciais.</p>
+        <p class="font-bold text-sm uppercase tracking-wide">{{ __('Development Mode') }}</p>
+        <p class="text-sm">{{ __('This is a project focused on learning and has no commercial purposes.') }}</p>
     </div>
 
     <div class="flex justify-between items-end mb-8 border-b border-slate-800 pb-4">
         <div>
-            <h1 class="font-cinzel text-3xl md:text-4xl text-white drop-shadow-md">Seus Heróis</h1>
-            <p class="text-slate-400 text-sm mt-1">Escolha seu destino e continue sua jornada.</p>
+            <h1 class="font-cinzel text-3xl md:text-4xl text-white drop-shadow-md">{{ __('Your Heroes') }}</h1>
+            <p class="text-slate-400 text-sm mt-1">{{ __('Choose your destiny and continue your journey.') }}</p>
         </div>
         <a href="{{route('new_character')}}" class="rpg-btn-primary">
-            + Novo Personagem
+            + {{ __('New Character') }}
         </a>
     </div>
 
@@ -120,26 +120,26 @@
 
                 // Lógica de Imagem e Classe (Movida para cá para limpar o HTML)
                 $img = 'Mingy.png'; // Fallback
-                $className = 'Desconhecido';
+                $className = 'Unknown';
 
-                if ($character->getGold() >= 100) { $img = 'Mingy.png'; $className = 'Rico'; }
-                elseif ($skillPct == 0 && $energyPct == 0 && $luckPct == 0 && $enchantmentPct == 0) { $img = 'The Weak.png'; $className = 'Fraco'; }
-                elseif ($skillPct == 1 && $energyPct == 1 && $luckPct == 1 && $enchantmentPct == 1) { $img = 'Vitruvian.png'; $className = 'Perfeito'; }
-                elseif ($skillPct == $energyPct && $skillPct == $luckPct && $skillPct == $enchantmentPct) { $img = 'Pilgrim.png'; $className = 'Peregrino'; }
-                elseif ($skillPct == $energyPct && $skillPct == $luckPct && $skillPct > $enchantmentPct) { $img = 'Swashbuckler.png'; $className = 'Espadachim'; }
-                elseif ($skillPct == $energyPct && $skillPct == $enchantmentPct && $skillPct > $luckPct) { $img = 'Paladin.png'; $className = 'Paladino'; }
-                elseif ($skillPct > $energyPct && $skillPct == $luckPct && $skillPct == $enchantmentPct) { $img = 'Artificer.png'; $className = 'Artífice'; }
-                elseif ($skillPct < $energyPct && $energyPct == $luckPct && $energyPct == $enchantmentPct) { $img = 'Xamã.png'; $className = 'Xamã'; }
-                elseif ($skillPct == $energyPct && $skillPct > $luckPct && $skillPct > $enchantmentPct) { $img = 'Monk.png'; $className = 'Monge'; }
-                elseif ($skillPct == $luckPct && $skillPct > $energyPct && $skillPct > $enchantmentPct) { $img = 'Rogue.png'; $className = 'Ladino'; }
-                elseif ($skillPct == $enchantmentPct && $skillPct > $energyPct && $skillPct > $luckPct) { $img = 'Mage.png'; $className = 'Mago'; }
-                elseif ($energyPct == $luckPct && $energyPct > $skillPct && $energyPct > $enchantmentPct) { $img = 'Druid.png'; $className = 'Druida'; }
-                elseif ($energyPct == $enchantmentPct && $energyPct > $skillPct && $energyPct > $luckPct) { $img = 'Cleric.png'; $className = 'Clérigo'; }
-                elseif ($luckPct == $enchantmentPct && $luckPct > $skillPct && $luckPct > $energyPct) { $img = 'Sorcerer.png'; $className = 'Feiticeiro'; }
-                elseif ($skillPct > $energyPct && $skillPct > $luckPct && $skillPct > $enchantmentPct) { $img = 'Warrior.png'; $className = 'Guerreiro'; }
-                elseif ($energyPct > $skillPct && $energyPct > $luckPct && $energyPct > $enchantmentPct) { $img = 'Barbarian.png'; $className = 'Bárbaro'; }
-                elseif ($luckPct > $skillPct && $luckPct > $energyPct && $luckPct > $enchantmentPct) { $img = 'Ranger.png'; $className = 'Patrulheiro'; }
-                elseif ($enchantmentPct > $skillPct && $enchantmentPct > $energyPct && $enchantmentPct > $luckPct) { $img = 'Wizard.png'; $className = 'Bruxo'; }
+                if ($character->getGold() >= 100) { $img = 'Mingy.png'; $className = 'Rich'; }
+                elseif ($skillPct == 0 && $energyPct == 0 && $luckPct == 0 && $enchantmentPct == 0) { $img = 'The Weak.png'; $className = 'Weak'; }
+                elseif ($skillPct == 1 && $energyPct == 1 && $luckPct == 1 && $enchantmentPct == 1) { $img = 'Vitruvian.png'; $className = 'Perfect'; }
+                elseif ($skillPct == $energyPct && $skillPct == $luckPct && $skillPct == $enchantmentPct) { $img = 'Pilgrim.png'; $className = 'Pilgrim'; }
+                elseif ($skillPct == $energyPct && $skillPct == $luckPct && $skillPct > $enchantmentPct) { $img = 'Swashbuckler.png'; $className = 'Swashbuckler'; }
+                elseif ($skillPct == $energyPct && $skillPct == $enchantmentPct && $skillPct > $luckPct) { $img = 'Paladin.png'; $className = 'Paladin'; }
+                elseif ($skillPct > $energyPct && $skillPct == $luckPct && $skillPct == $enchantmentPct) { $img = 'Artificer.png'; $className = 'Artificer'; }
+                elseif ($skillPct < $energyPct && $energyPct == $luckPct && $energyPct == $enchantmentPct) { $img = 'Shaman.png'; $className = 'Shaman'; }
+                elseif ($skillPct == $energyPct && $skillPct > $luckPct && $skillPct > $enchantmentPct) { $img = 'Monk.png'; $className = 'Monk'; }
+                elseif ($skillPct == $luckPct && $skillPct > $energyPct && $skillPct > $enchantmentPct) { $img = 'Rogue.png'; $className = 'Rogue'; }
+                elseif ($skillPct == $enchantmentPct && $skillPct > $energyPct && $skillPct > $luckPct) { $img = 'Mage.png'; $className = 'Mage'; }
+                elseif ($energyPct == $luckPct && $energyPct > $skillPct && $energyPct > $enchantmentPct) { $img = 'Druid.png'; $className = 'Druid'; }
+                elseif ($energyPct == $enchantmentPct && $energyPct > $skillPct && $energyPct > $luckPct) { $img = 'Cleric.png'; $className = 'Cleric'; }
+                elseif ($luckPct == $enchantmentPct && $luckPct > $skillPct && $luckPct > $energyPct) { $img = 'Sorcerer.png'; $className = 'Sorcerer'; }
+                elseif ($skillPct > $energyPct && $skillPct > $luckPct && $skillPct > $enchantmentPct) { $img = 'Warrior.png'; $className = 'Warrior'; }
+                elseif ($energyPct > $skillPct && $energyPct > $luckPct && $energyPct > $enchantmentPct) { $img = 'Barbarian.png'; $className = 'Barbarian'; }
+                elseif ($luckPct > $skillPct && $luckPct > $energyPct && $luckPct > $enchantmentPct) { $img = 'Ranger.png'; $className = 'Ranger'; }
+                elseif ($enchantmentPct > $skillPct && $enchantmentPct > $energyPct && $enchantmentPct > $luckPct) { $img = 'Wizard.png'; $className = 'Wizard'; }
 
 
                 $skillPct = $character->getSkillCurrent() / $character->getSkillStart();
@@ -152,9 +152,9 @@
 
                 <div class="relative h-48 bg-slate-950 overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent z-10"></div>
-                    <img src="{{ asset('images/' . $img) }}" alt="{{ $className }}" class="w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
+                    <img src="{{ asset('images/' . $img) }}" alt="{{ __($className) }}" class="w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
                     <div class="absolute bottom-2 left-4 z-20">
-                        <span class="text-xs text-amber-400 font-bold tracking-widest uppercase mb-1 block">{{ $className }}</span>
+                        <span class="text-xs text-amber-400 font-bold tracking-widest uppercase mb-1 block">{{ __($className) }}</span>
                         <h2 class="text-xl font-bold text-white font-cinzel">ID: {{ $character->getId() }}</h2>
                     </div>
                 </div>
@@ -164,7 +164,7 @@
                     <div class="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
                         <div class="stat-group">
                             <div class="flex justify-between mb-1">
-                                <span class="text-slate-400">Habilidade</span>
+                                <span class="text-slate-400">{{ __('Skill') }}</span>
                                 <span class="text-slate-200 font-mono">{{$character->getSkillCurrent()}}</span>
                             </div>
                             <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
@@ -174,7 +174,7 @@
 
                         <div class="stat-group">
                             <div class="flex justify-between mb-1">
-                                <span class="text-slate-400">Energia</span>
+                                <span class="text-slate-400">{{ __('Energy') }}</span>
                                 <span class="text-slate-200 font-mono">{{$character->getEnergyCurrent()}}</span>
                             </div>
                             <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
@@ -184,7 +184,7 @@
 
                         <div class="stat-group">
                             <div class="flex justify-between mb-1">
-                                <span class="text-slate-400">Sorte</span>
+                                <span class="text-slate-400">{{ __('Luck') }}</span>
                                 <span class="text-slate-200 font-mono">{{$character->getLuckCurrent()}}</span>
                             </div>
                             <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
@@ -194,8 +194,8 @@
 
                         <div class="stat-group">
                             <div class="flex justify-between mb-1">
-                                <span class="text-slate-400">Magias</span>
-                                <span class="text-slate-200 font-mono">{{$character->getEnchantmentStart()}}</span>
+                                <span class="text-slate-400">{{ __('Spells') }}</span>
+                                <span class="text-slate-200 font-mono">{{$character->getEnchantmentCurrent()}}</span>
                             </div>
                             <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
                                 <div class="h-full bg-purple-500" style="width: {{ $enchantmentPct * 100 }}%"></div>
@@ -205,11 +205,11 @@
 
                     <div class="mt-2 pt-3 border-t border-slate-700 grid grid-cols-1 gap-2 text-center">
                         <div class="bg-slate-900/50 rounded p-2 border border-slate-700/50">
-                            <span class="block text-xs text-slate-500 uppercase">Ouro</span>
+                            <span class="block text-xs text-slate-500 uppercase">{{ __('Gold') }}</span>
                             <span class="text-amber-400 font-bold">{{ $character->getGold() }}</span>
                         </div>
                         {{-- <div class="bg-slate-900/50 rounded p-2 border border-slate-700/50">
-                            <span class="block text-xs text-slate-500 uppercase">Capítulo</span>
+                            <span class="block text-xs text-slate-500 uppercase">{{ __('Chapter') }}</span>
                             <span class="text-slate-300 font-bold">{{ $character->getCurrentStoryNode() }}</span>
                         </div> --}}
                     </div>
@@ -218,7 +218,7 @@
                 <form method="GET" action="{{ route('game', ['id'=>$character->getId()]) }}" class="p-4 pt-0">
                     @csrf
                     <button type="submit" class="w-full py-2 bg-slate-700 hover:bg-amber-600 text-white font-bold rounded transition-colors uppercase text-sm tracking-wider border border-transparent hover:border-amber-400">
-                        Continuar Jornada
+                        {{ __('Continue Journey') }}
                     </button>
                 </form>
             </div>

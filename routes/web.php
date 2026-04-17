@@ -6,16 +6,18 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\EnchantmentController;
 use App\Http\Controllers\GameController;
+use Illuminate\Support\Env;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/adventure_choice', [GameController::class, 'adventure_choice'])->name('adventure_choice')->middleware('auth');
+Route::get('/adventure_choice', [GameController::class, 'adventureChoice'])->name('adventure_choice')->middleware('auth');
 Route::get('/new_character', [CharacterController::class, 'newCharacter'])->name('new_character')->middleware('auth');
 Route::get('/game/{id}', [GameController::class, 'game'])->name('game')->middleware('auth');
-Route::get('/game/{id}/enchantments', [EnchantmentController::class, 'enchantmentChoice'])->name('enchantments')->middleware('auth');
+Route::get('/game/{id}/enchantment_choice', [EnchantmentController::class, 'enchantmentChoice'])->name('enchantment_choice')->middleware('auth');
+Route::post('/game/{id}/save_enchantments', [EnchantmentController::class, 'enchantmentAttribution'])->name('save_enchantments')->middleware('auth');
 Route::get('/nextChap/{id}', [GameController::class, 'nextChap'])->name('nextChap')->middleware('auth');
 
 Route::get('/dashboard', function () {
@@ -27,5 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 require __DIR__.'/auth.php';

@@ -1,16 +1,16 @@
 @extends('layouts.game')
 
-@section('title', 'Todas as Histórias')
+@section('title', __('All Stories'))
 
 @section('header-nav')
-    <a href="{{ url('/adventure_choice') }}" class="text-slate-400 hover:text-amber-500 transition">Voltar</a>
+    <a href="{{ url('/adventure_choice') }}" class="text-slate-400 hover:text-amber-500 transition">{{ __('Back') }}</a>
 @endsection
 
 @section('content')
     <div class="flex justify-between items-end mb-8 border-b border-slate-800 pb-4">
         <div>
-            <h1 class="font-cinzel text-3xl md:text-4xl text-white drop-shadow-md">Todas as Histórias</h1>
-            <p class="text-slate-400 text-sm mt-1">Uma visão geral de todas as narrativas disponíveis.</p>
+            <h1 class="font-cinzel text-3xl md:text-4xl text-white drop-shadow-md">{{ __('All Stories') }}</h1>
+            <p class="text-slate-400 text-sm mt-1">{{ __('An overview of all available narratives.') }}</p>
         </div>
     </div>
 

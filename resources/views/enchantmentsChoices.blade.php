@@ -1,11 +1,11 @@
 @extends('layouts.game')
 
-@section('title', 'Escolha de Magias')
+@section('title', __('Spell Choice'))
 
 @section('header-nav')
     @if (Route::has('login'))
         @auth
-            <a href="{{ url('/dashboard') }}" class="rpg-btn">Dashboard</a>
+            <a href="{{ url('/dashboard') }}" class="rpg-btn">{{ __('Dashboard') }}</a>
         @else
             <a href="{{ route('login') }}" class="text-slate-400 hover:text-amber-500 transition">Log in</a>
             @if (Route::has('register'))
@@ -18,12 +18,12 @@
 @section('content')
     <div class="flex justify-between items-end mb-8 border-b border-slate-800 pb-4">
         <div>
-            <h1 class="font-cinzel text-3xl md:text-4xl text-purple-400 drop-shadow-md">Tomos Arcanos</h1>
-            <p class="text-slate-400 text-sm mt-1">Estude e memorize seus feitiços. Você pode escolher a mesma magia várias vezes.</p>
+            <h1 class="font-cinzel text-3xl md:text-4xl text-purple-400 drop-shadow-md">{{ __('Arcane Tomes') }}</h1>
+            <p class="text-slate-400 text-sm mt-1">{{ __('Study and memorize your spells. You can choose the same spell several times.') }}</p>
         </div>
 
         <div class="bg-slate-950 border border-slate-700 px-6 py-3 rounded-lg shadow-inner text-center">
-            <span class="block text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">Pontos Disponíveis</span>
+            <span class="block text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">{{ __('Available Points') }}</span>
             <span id="remaining-counter" class="text-3xl font-cinzel text-amber-400 font-bold">{{ $enchantments_limit }}</span>
         </div>
     </div>
@@ -38,12 +38,12 @@
                     <div class="p-5 flex-grow">
                         <h3 class="font-cinzel text-xl font-bold text-white mb-2">{{ $enchantment->name }}</h3>
                         <p class="text-sm text-slate-400 line-clamp-3">
-                            {{ $enchantment->description ?? 'Uma magia ancestral com poderes misteriosos.' }}
+                            {{ $enchantment->description ?? __('An ancient magic with mysterious powers.') }}
                         </p>
                     </div>
 
                     <div class="p-4 bg-slate-900/50 border-t border-slate-700 flex items-center justify-between">
-                        <span class="text-xs text-slate-500 uppercase font-bold tracking-wider">Memorizar</span>
+                        <span class="text-xs text-slate-500 uppercase font-bold tracking-wider">{{ __('Memorize') }}</span>
 
                         <div class="flex items-center gap-3">
                             <button type="button" class="btn-minus w-8 h-8 rounded bg-slate-700 hover:bg-red-900 text-white flex items-center justify-center transition disabled:opacity-50 disabled:cursor-not-allowed" data-id="{{ $enchantment->id }}">
@@ -63,7 +63,7 @@
 
         <div class="flex justify-end sticky bottom-6">
             <button type="submit" id="submit-btn" disabled class="px-8 py-4 bg-slate-800 text-slate-500 font-bold rounded-lg transition-all duration-300 uppercase tracking-widest border border-slate-700 cursor-not-allowed shadow-lg">
-                Confirmar Magias
+                {{ __('Confirm Spells') }}
             </button>
         </div>
     </form>
