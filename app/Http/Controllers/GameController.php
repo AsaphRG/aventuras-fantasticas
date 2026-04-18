@@ -7,6 +7,7 @@ use App\Models\Choice;
 use Illuminate\Http\Request;
 use App\Logic\Player as PlayerLogic;
 use App\Models\PlayerEnchantments;
+use App\Models\PlayerStoryNode;
 
 class GameController extends Controller
 {
@@ -76,6 +77,11 @@ class GameController extends Controller
 
         $character->currentStoryNode = $choice->to_story_node_id;
         $character->save();
+
+        PlayerStoryNode::create([
+            'player_id' => $character->id,
+            'story_node_id' => $choice->to_story_node_id
+        ]);
 
         return redirect()->route('game', ['id' => $character->id]);
     }

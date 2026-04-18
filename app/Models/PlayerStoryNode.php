@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PlayerStoryNode extends Model
 {
+    protected $fillable = [
+        'player_id',
+        'story_node_id',
+    ];
+
     public function player(): BelongsTo
     {
         return $this->belongsTo(Player::class, 'player_id');

@@ -8,10 +8,6 @@ use App\Http\Controllers\EnchantmentController;
 use App\Http\Controllers\GameController;
 use Illuminate\Support\Env;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/adventure_choice', [GameController::class, 'adventureChoice'])->name('adventure_choice')->middleware('auth');
 Route::get('/new_character', [CharacterController::class, 'newCharacter'])->name('new_character')->middleware('auth');
