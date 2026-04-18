@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite(['resources/js/app.js', 'resources/css/app.css'])
     <title>{{ config('app.name', 'Cidadela do Caos') }} - @yield('title', __('Playing'))</title>
+    <link rel="shortcut icon" href="{{ asset('images/logo-nobg.png') }}" type="image/x-icon">
 
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
