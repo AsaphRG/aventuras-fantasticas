@@ -2,19 +2,6 @@
 
 @section('title', __('Spell Choice'))
 
-@section('header-nav')
-    @if (Route::has('login'))
-        @auth
-            <a href="{{ url('/dashboard') }}" class="rpg-btn">{{ __('Dashboard') }}</a>
-        @else
-            <a href="{{ route('login') }}" class="text-slate-400 hover:text-amber-500 transition">Log in</a>
-            @if (Route::has('register'))
-                <a href="{{ route('register') }}" class="rpg-btn">Register</a>
-            @endif
-        @endauth
-    @endif
-@endsection
-
 @section('content')
     <div class="flex justify-between items-end mb-8 border-b border-slate-800 pb-4">
         <div>

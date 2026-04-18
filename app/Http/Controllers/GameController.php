@@ -43,6 +43,10 @@ class GameController extends Controller
 
         $enchantments = $character->enchantments;
 
+        if(count($enchantments) == 0) {
+            return redirect()->route('enchantment_choice', ['id' => $character->id]);
+        }
+
         $playable_character = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
 
         $playable_character->createGrimory($enchantments);
