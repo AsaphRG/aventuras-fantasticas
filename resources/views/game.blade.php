@@ -96,11 +96,89 @@
                 </div>
             </div>
 
+            <div class="mt-4 border-t border-slate-700 pt-4">
+                <h3 class="text-xs font-cinzel font-bold uppercase tracking-widest text-slate-400 mb-3 flex items-center gap-2">
+                    <span>📖</span> {{ __('Meu Grimório') }}
+                </h3>
+                @if(isset($enchantments_list) && $enchantments_list->count() > 0)
+                    <div class="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+                        @foreach($enchantments_list as $spell)
+                            <div class="p-2.5 rounded border text-xs flex items-center justify-between {{ $spell->used ? 'bg-slate-900/40 border-slate-800 text-slate-500 opacity-60' : 'bg-slate-900 border-purple-500/30 text-purple-200 shadow-sm' }}">
+                                <div class="flex flex-col">
+                                    <span class="font-bold {{ $spell->used ? 'line-through' : 'text-purple-300' }}">{{ $spell->enchantment->name }}</span>
+                                    <span class="text-[10px] text-slate-400">{{ $spell->used ? 'Gasto' : 'Disponível' }}</span>
+                                </div>
+                                @if(!$spell->used && in_array($spell->enchantment_id, [7, 9, 10]))
+                                    <form method="POST" action="{{ route('game.cast_spell', ['id' => $model_character->id, 'spell_id' => $spell->id]) }}">
+                                        @csrf
+                                        <button type="submit" class="px-2 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded shadow transition text-[10px] cursor-pointer" title="Conjurar magia de cura">
+                                            ⚡ Conjurar
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-xs text-slate-500 italic">Nenhum feitiço no grimório.</p>
+                @endif
+            </div>
+
         </div>
     </div>
 @endsection
 
 @section('content')
+    @if (session('node_effects'))
+        <div class="p-6 rounded-xl border-2 mb-6 shadow-2xl transition-all duration-500 animate-fade-in bg-gradient-to-r from-amber-950/80 to-slate-900 border-amber-500/80 text-amber-200 shadow-amber-950/50">
+            <div class="flex items-center gap-4">
+                <div class="text-4xl p-3 rounded-full bg-amber-900/50 border border-amber-500/50">
+                    ✨
+                </div>
+                <div>
+                    <h4 class="font-cinzel font-bold text-xl uppercase tracking-wider text-amber-400">
+                        {{ __('Acontecimento do Destino!') }}
+                    </h4>
+                    <ul class="font-light text-lg mt-1 leading-relaxed list-disc list-inside">
+                        @foreach(session('node_effects') as $effectMsg)
+                            <li>{{ $effectMsg }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+    @endif
+    @if (session('spell_casted'))
+        <div class="p-6 rounded-xl border-2 mb-6 shadow-2xl transition-all duration-500 animate-fade-in bg-gradient-to-r from-purple-950/80 to-slate-900 border-purple-500/80 text-purple-200 shadow-purple-950/50">
+            <div class="flex items-center gap-4">
+                <div class="text-4xl p-3 rounded-full bg-purple-900/50 border border-purple-500/50">
+                    🪄
+                </div>
+                <div>
+                    <h4 class="font-cinzel font-bold text-xl uppercase tracking-wider text-purple-400">
+                        {{ __('Magia Conjurada!') }}
+                    </h4>
+                    <p class="font-light text-lg mt-1 leading-relaxed">{{ session('spell_casted') }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if (session('error_message'))
+        <div class="p-6 rounded-xl border-2 mb-6 shadow-2xl transition-all duration-500 animate-fade-in bg-gradient-to-r from-red-950/80 to-slate-900 border-red-500/80 text-red-200 shadow-red-950/50">
+            <div class="flex items-center gap-4">
+                <div class="text-4xl p-3 rounded-full bg-red-900/50 border border-red-500/50">
+                    ⚠️
+                </div>
+                <div>
+                    <h4 class="font-cinzel font-bold text-xl uppercase tracking-wider text-red-400">
+                        {{ __('Aviso Mágico') }}
+                    </h4>
+                    <p class="font-light text-lg mt-1 leading-relaxed">{{ session('error_message') }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
     @if (session('luck_message'))
         <div class="p-6 rounded-xl border-2 mb-6 shadow-2xl transition-all duration-500 animate-fade-in {{ session('luck_result') == 'success' ? 'bg-gradient-to-r from-green-950/80 to-slate-900 border-green-500/80 text-green-200 shadow-green-950/50' : 'bg-gradient-to-r from-red-950/80 to-slate-900 border-red-500/80 text-red-200 shadow-red-950/50' }}">
             <div class="flex items-center gap-4">
@@ -174,8 +252,13 @@
                         <input type="hidden" name="choice_id" value="{{$choice->id}}">
 
                         <button type="submit" class="group w-full text-left p-5 bg-slate-900 border border-slate-700 rounded-lg hover:border-amber-500 hover:bg-slate-800 transition-all duration-300 shadow-md hover:shadow-amber-900/10 flex items-center justify-between">
-                            <span class="text-lg text-slate-200 group-hover:text-amber-400 font-cinzel transition-colors">
-                                {{$choice->choice_description}}
+                            <span class="text-lg text-slate-200 group-hover:text-amber-400 font-cinzel transition-colors flex items-center gap-2">
+                                @if($choice->required_flag)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-purple-900/80 text-purple-300 border border-purple-500/40 shrink-0">
+                                        🔮 Requer: {{ $choice->required_flag }}
+                                    </span>
+                                @endif
+                                <span>{{$choice->choice_description}}</span>
                             </span>
                             <span class="opacity-0 group-hover:opacity-100 text-amber-500 transition-opacity">
                                 ➤

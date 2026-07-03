@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Choice extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'from_story_node_id',
         'choice_description',

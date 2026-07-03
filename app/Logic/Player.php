@@ -127,4 +127,40 @@ class Player extends Fighter {
 
     public function getDead():bool {return $this->dead;}
     public function setDead(bool $status):void {$this->dead = $status;}
+
+    public function decreaseEnergyCurrent(int $value):void {
+        $this->energyCurrent = max(0, $this->energyCurrent - $value);
+    }
+
+    public function decreaseLuckCurrent(int $value):void {
+        $this->luckCurrent = max(0, $this->luckCurrent - $value);
+    }
+
+    public function decreaseGold(int $value):void {
+        $this->gold = max(0, $this->gold - $value);
+    }
+
+    public function applyStatChange(string $attribute, int $value): void {
+        switch ($attribute) {
+            case 'luck':
+                $value > 0 ? $this->increaseLuck($value) : $this->decreaseLuckCurrent(abs($value));
+                break;
+            case 'energy':
+                $value > 0 ? $this->increaseEnergy($value) : $this->decreaseEnergyCurrent(abs($value));
+                break;
+            case 'skill':
+                $value > 0 ? $this->increaseSkill($value) : $this->decreaseSkillCurrent(abs($value));
+                break;
+            case 'gold':
+                $value > 0 ? $this->increaseGold($value) : $this->decreaseGold(abs($value));
+                break;
+        }
+    }
+
+    public function syncToModel($character): void {
+        $character->skillCurrent = $this->getSkillCurrent();
+        $character->energyCurrent = $this->getEnergyCurrent();
+        $character->luckCurrent = $this->getLuckCurrent();
+        $character->gold = $this->getGold();
+    }
 }

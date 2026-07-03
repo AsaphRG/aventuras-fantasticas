@@ -6,20 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Item extends Model
+class PlayerItems extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $table = 'player_items';
+
     protected $fillable = [
+        'player_id',
         'name',
         'description',
-        'skill_bonus',
-        'bonus_value',
+        'abilityBonus',
         'category',
     ];
+
+    public function player(): BelongsTo
+    {
+        return $this->belongsTo(Player::class);
+    }
 }

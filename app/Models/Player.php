@@ -39,7 +39,7 @@ class Player extends Model
 
     public function items(): HasMany
     {
-        return $this->hasMany(Item::class);
+        return $this->hasMany(PlayerItems::class, 'player_id');
     }
 
     public function enchantments(): HasMany
@@ -60,5 +60,42 @@ class Player extends Model
     public function playerStoryNode(): HasMany
     {
         return $this->hasMany(PlayerStoryNode::class);
+    }
+
+    /**
+     * Sincroniza as magias não utilizadas e itens do personagem com a tabela player_flag.
+     * Isso é essencial para garantir que personagens já criados antes da implementação de flags tenham seus registros.
+     */
+    public function syncFlags(): void
+    {
+        $enchantments = $this->enchantments()
+            ->where('used', false)
+            ->with('enchantment')
+            ->get()
+            ->map(function ($pe) {
+                return $pe->enchantment ? $pe->enchantment->name : null;
+            })
+            ->filter();
+
+        $items = $this->items()
+            ->pluck('name')
+            ->filter();
+
+        $allNames = $enchantments->merge($items)->unique();
+
+        $insertData = [];
+        $now = now();
+        foreach ($allNames as $name) {
+            $insertData[] = [
+                'player_id' => $this->id,
+                'flag_name' => $name,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        if (!empty($insertData)) {
+            PlayerFlag::insertOrIgnore($insertData);
+        }
     }
 }
