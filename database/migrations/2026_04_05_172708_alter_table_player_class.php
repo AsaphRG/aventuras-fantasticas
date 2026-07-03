@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('players', function (Blueprint $table) {
-            $table->enum('class', ['Mingy', 'The Weak', 'Vitruvian', 'Pilgrim', 'Swashbuckler', 'Paladin', 'Artificer', 'Xamã', 'Monk', 'Rogue', 'Mage', 'Druid', 'Cleric', 'Sorcerer', 'Warrior', 'Barbarian', 'Ranger', 'Wizard'])->nullable(false);
+            $table->enum('class', ['Mingy', 'The Weak', 'Vitruvian', 'Pilgrim', 'Swashbuckler', 'Paladin', 'Artificer', 'Xamã', 'Monk', 'Rogue', 'Mage', 'Druid', 'Cleric', 'Sorcerer', 'Warrior', 'Barbarian', 'Ranger', 'Wizard'])->nullable();
         });
     }
 

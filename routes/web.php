@@ -15,6 +15,7 @@ Route::get('/game/{id}', [GameController::class, 'game'])->name('game')->middlew
 Route::get('/game/{id}/enchantment_choice', [EnchantmentController::class, 'enchantmentChoice'])->name('enchantment_choice')->middleware('auth');
 Route::post('/game/{id}/save_enchantments', [EnchantmentController::class, 'enchantmentAttribution'])->name('save_enchantments')->middleware('auth');
 Route::get('/nextChap/{id}', [GameController::class, 'nextChap'])->name('nextChap')->middleware('auth');
+Route::post('/game/{id}/test-luck', [GameController::class, 'testLuck'])->name('game.test_luck')->middleware('auth');
 
 Route::get('/dashboard', function () {
     return view('dashboard', ['totalGames' => 0, 'totalWins' => 0, 'totalDeaths' => 0, 'winRate' => 0, 'heroes' => []]);

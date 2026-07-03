@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class StoryNode extends Model
 {
@@ -29,4 +30,10 @@ class StoryNode extends Model
     {
         return $this->belongsToMany(Enemy::class, 'story_battle', 'story_node_id', 'enemy_id');
     }
+
+    public function luckTest(): HasOne
+    {
+        return $this->hasOne(LuckTest::class, 'story_node_id');
+    }
 }
+

@@ -85,4 +85,36 @@ class GameController extends Controller
 
         return redirect()->route('game', ['id' => $character->id]);
     }
+
+    public function testLuck(Request $request, int $character_id) {
+        $user = $request->user();
+
+        $character = $user->character()->findOrFail($character_id);
+        $luckTest = $character->storyNode->luckTest;
+
+        if (!$luckTest) {
+            return redirect()->route('game', ['id' => $character->id]);
+        }
+
+        $playable_character = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
+
+        $isLucky = $playable_character->testLuck();
+        $character->luckCurrent = $playable_character->getLuckCurrent();
+
+        $targetNode = $isLucky ? $luckTest->success_go_to : $luckTest->fail_go_to;
+        $message = $isLucky ? $luckTest->success_message : $luckTest->fail_message;
+
+        $character->currentStoryNode = $targetNode;
+        $character->save();
+
+        PlayerStoryNode::create([
+            'player_id' => $character->id,
+            'story_node_id' => $targetNode
+        ]);
+
+        return redirect()->route('game', ['id' => $character->id])
+                         ->with('luck_result', $isLucky ? 'success' : 'failure')
+                         ->with('luck_message', $message);
+    }
 }
+
