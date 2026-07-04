@@ -118,8 +118,46 @@ class Player extends Fighter {
         }
     }
 
+    public function loadItems(Collection|null $items):void {
+        if(!is_null($items)) {
+            $this->items = $items;
+        }
+    }
+
     public function addItem($item):void {
-        $this->items[] = $item;
+        $this->items->push($item);
+    }
+
+    public function getSkillBonusFromItems(): int {
+        $bonus = 0;
+        foreach ($this->items as $item) {
+            if (in_array($item->category, ['Weapon', 'Equipment', 'Passive'])) {
+                if ($item->abilityBonus && str_starts_with($item->abilityBonus, 'Skill:')) {
+                    $bonus += (int) substr($item->abilityBonus, 6);
+                }
+            }
+        }
+        return $bonus;
+    }
+
+    public function getEffectiveSkill(): int {
+        return $this->skillCurrent + $this->getSkillBonusFromItems();
+    }
+
+    public function getLuckBonusFromItems(): int {
+        $bonus = 0;
+        foreach ($this->items as $item) {
+            if (in_array($item->category, ['Weapon', 'Equipment', 'Passive'])) {
+                if ($item->abilityBonus && str_starts_with($item->abilityBonus, 'Luck:')) {
+                    $bonus += (int) substr($item->abilityBonus, 5);
+                }
+            }
+        }
+        return $bonus;
+    }
+
+    public function getEffectiveLuck(): int {
+        return $this->luckCurrent + $this->getLuckBonusFromItems();
     }
 
     public function getWin():bool {return $this->win;}

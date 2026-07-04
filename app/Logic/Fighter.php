@@ -10,8 +10,10 @@ abstract class Fighter {
 
     public function getSkillCurrent():int {return $this->skillCurrent;}
 
+    public function getEffectiveSkill():int {return $this->skillCurrent;}
+
     public function calculateAttackForce():int {
-        return (rand(1, 6) + rand(1, 6) + $this->skillCurrent);
+        return (rand(1, 6) + rand(1, 6) + $this->getEffectiveSkill());
     }
 
     public function getDamaged(int $damage = 2):void {

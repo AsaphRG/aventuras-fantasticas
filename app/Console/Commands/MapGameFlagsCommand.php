@@ -82,6 +82,34 @@ class MapGameFlagsCommand extends Command
             }
         }
 
+        Item::firstOrCreate(
+            ['name' => 'Espada Solar'],
+            [
+                'description' => 'Uma Espada Solar que acrescenta quatro pontos à sua HABILIDADE quando você lutar com ela!',
+                'skill_bonus' => 'Skill',
+                'bonus_value' => 4,
+                'category' => 'Weapon'
+            ]
+        );
+
+        $itemRewards = [
+            2305 => 'Pequenas Amoras',
+            2633 => 'Miríade de Bolso',
+            2634 => 'Miríade de Bolso',
+            2188 => 'Adaga de metal encantada',
+            2645 => 'Espada Solar',
+        ];
+
+        foreach ($itemRewards as $choiceId => $rewardItem) {
+            $ch = Choice::find($choiceId);
+            if ($ch && $ch->set_flag !== $rewardItem) {
+                $ch->set_flag = $rewardItem;
+                $ch->save();
+                $updatedCount++;
+                $this->line("Mapeado set_flag Choice ID {$ch->id}: [{$rewardItem}]");
+            }
+        }
+
         $this->info("Mapeamento concluído com sucesso! {$updatedCount} escolhas atualizadas.");
         return 0;
     }

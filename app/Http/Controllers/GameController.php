@@ -9,6 +9,7 @@ use App\Logic\Player as PlayerLogic;
 use App\Models\PlayerEnchantments;
 use App\Models\PlayerStoryNode;
 use App\Models\NodeEffect;
+use App\Models\Item;
 
 class GameController extends Controller
 {
@@ -27,6 +28,7 @@ class GameController extends Controller
                 $playable_instance = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
 
                 $playable_instance->createGrimory($enchantments);
+                $playable_instance->loadItems($character->items);
 
                 $playable_character[] = $playable_instance;
             }
@@ -54,6 +56,7 @@ class GameController extends Controller
         $playable_character = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
 
         $playable_character->createGrimory($enchantments);
+        $playable_character->loadItems($character->items);
 
         // Sincroniza automaticamente flags de magias/itens para personagens já criados
         $character->syncFlags();
@@ -120,6 +123,24 @@ class GameController extends Controller
             }
         }
 
+        if ($choice->set_flag) {
+            $flagName = $choice->set_flag;
+
+            $catalogItem = Item::where('name', $flagName)->first();
+
+            if ($catalogItem) {
+                $character->items()->create([
+                    'name' => $catalogItem->name,
+                    'description' => $catalogItem->description,
+                    'abilityBonus' => $catalogItem->bonus_value ? ($catalogItem->skill_bonus . ':' . $catalogItem->bonus_value) : null,
+                    'category' => $catalogItem->category,
+                ]);
+                session()->flash('item_acquired', "🎒 Você adquiriu: {$catalogItem->name}!");
+            } else {
+                $character->flags()->firstOrCreate(['flag_name' => $flagName]);
+            }
+        }
+
         $character->currentStoryNode = $choice->to_story_node_id;
         $this->applyNodeEffects($character, $choice->to_story_node_id);
         $this->checkEndGameStatus($character);
@@ -148,6 +169,7 @@ class GameController extends Controller
         $message = '';
 
         $playable_character = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
+        $playable_character->loadItems($character->items);
 
         if ($enchantmentId == 7) { // Sorte
             $oldVal = $playable_character->getLuckCurrent();
@@ -185,6 +207,56 @@ class GameController extends Controller
         return redirect()->route('game', ['id' => $character->id])->with('spell_casted', $message);
     }
 
+    public function useItem(Request $request, int $character_id, int $item_id) {
+        $user = $request->user();
+        $character = $user->character()->findOrFail($character_id);
+
+        $item = $character->items()->findOrFail($item_id);
+
+        if ($item->category !== 'Consumable' && $item->category !== 'Potion') {
+            return redirect()->route('game', ['id' => $character->id])
+                ->with('item_error', 'Este item não pode ser consumido diretamente.');
+        }
+
+        $playable_character = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
+        $playable_character->loadItems($character->items);
+
+        $message = "✨ Você consumiu: {$item->name}!";
+
+        if ($item->abilityBonus) {
+            $parts = explode(':', $item->abilityBonus);
+            if (count($parts) === 2) {
+                $stat = strtolower(trim($parts[0]));
+                $val = (int) trim($parts[1]);
+
+                if ($stat === 'energy' || $stat === 'energia') {
+                    if ($val > 0) {
+                        $playable_character->increaseEnergy($val);
+                        $message .= " (+{$val} de Energia!)";
+                    }
+                } elseif ($stat === 'luck' || $stat === 'sorte') {
+                    if ($val > 0) {
+                        $playable_character->increaseLuck($val);
+                        $message .= " (+{$val} de Sorte!)";
+                    }
+                } elseif ($stat === 'skill' || $stat === 'habilidade') {
+                    if ($val > 0) {
+                        $playable_character->increaseSkill($val);
+                        $message .= " (+{$val} de Habilidade!)";
+                    }
+                }
+            }
+        }
+
+        $playable_character->syncToModel($character);
+        $character->save();
+
+        $item->delete();
+
+        return redirect()->route('game', ['id' => $character->id])
+            ->with('item_used', $message);
+    }
+
     public function testLuck(Request $request, int $character_id) {
         $user = $request->user();
 
@@ -196,6 +268,7 @@ class GameController extends Controller
         }
 
         $playable_character = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
+        $playable_character->loadItems($character->items);
 
         $isLucky = $playable_character->testLuck();
         $character->luckCurrent = $playable_character->getLuckCurrent();
@@ -234,6 +307,7 @@ class GameController extends Controller
             $character->enchantmentStart, $character->gold,
             $targetNodeId, $character->id, $character->win, $character->dead
         );
+        $playable_character->loadItems($character->items);
 
         $messages = [];
         foreach ($effects as $effect) {

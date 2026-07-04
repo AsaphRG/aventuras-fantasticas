@@ -124,6 +124,38 @@
                 @endif
             </div>
 
+            <div class="mt-4 border-t border-slate-700 pt-4">
+                <h3 class="text-xs font-cinzel font-bold uppercase tracking-widest text-slate-400 mb-3 flex items-center gap-2">
+                    <span>🎒</span> {{ __('Mochila & Equipamentos') }}
+                </h3>
+                @if(isset($model_character) && $model_character->items->count() > 0)
+                    <div class="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+                        @foreach($model_character->items as $item)
+                            <div class="p-2.5 rounded border text-xs flex items-center justify-between bg-slate-900 border-amber-500/30 text-amber-200 shadow-sm">
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-amber-300">{{ $item->name }}</span>
+                                    @if($item->abilityBonus)
+                                        <span class="text-[10px] text-emerald-400 font-semibold">+{{ str_replace(':', ' +', $item->abilityBonus) }}</span>
+                                    @elseif($item->description)
+                                        <span class="text-[10px] text-slate-400 line-clamp-1" title="{{ $item->description }}">{{ $item->description }}</span>
+                                    @endif
+                                </div>
+                                @if(in_array($item->category, ['Consumable', 'Potion']))
+                                    <form method="POST" action="{{ route('game.use_item', ['id' => $model_character->id, 'item_id' => $item->id]) }}">
+                                        @csrf
+                                        <button type="submit" class="px-2 py-1 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold rounded shadow transition text-[10px] cursor-pointer" title="Usar item">
+                                            🧪 Usar
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-xs text-slate-500 italic">Sua mochila está vazia.</p>
+                @endif
+            </div>
+
         </div>
     </div>
 @endsection
@@ -159,6 +191,51 @@
                         {{ __('Magia Conjurada!') }}
                     </h4>
                     <p class="font-light text-lg mt-1 leading-relaxed">{{ session('spell_casted') }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+    @if (session('item_acquired'))
+        <div class="p-6 rounded-xl border-2 mb-6 shadow-2xl transition-all duration-500 animate-fade-in bg-gradient-to-r from-amber-950/80 to-slate-900 border-amber-500/80 text-amber-200 shadow-amber-950/50">
+            <div class="flex items-center gap-4">
+                <div class="text-4xl p-3 rounded-full bg-amber-900/50 border border-amber-500/50">
+                    🎒
+                </div>
+                <div>
+                    <h4 class="font-cinzel font-bold text-xl uppercase tracking-wider text-amber-400">
+                        {{ __('Novo Item Adquirido!') }}
+                    </h4>
+                    <p class="font-light text-lg mt-1 leading-relaxed">{{ session('item_acquired') }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+    @if (session('item_used'))
+        <div class="p-6 rounded-xl border-2 mb-6 shadow-2xl transition-all duration-500 animate-fade-in bg-gradient-to-r from-emerald-950/80 to-slate-900 border-emerald-500/80 text-emerald-200 shadow-emerald-950/50">
+            <div class="flex items-center gap-4">
+                <div class="text-4xl p-3 rounded-full bg-emerald-900/50 border border-emerald-500/50">
+                    🧪
+                </div>
+                <div>
+                    <h4 class="font-cinzel font-bold text-xl uppercase tracking-wider text-emerald-400">
+                        {{ __('Item Utilizado!') }}
+                    </h4>
+                    <p class="font-light text-lg mt-1 leading-relaxed">{{ session('item_used') }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+    @if (session('item_error'))
+        <div class="p-6 rounded-xl border-2 mb-6 shadow-2xl transition-all duration-500 animate-fade-in bg-gradient-to-r from-red-950/80 to-slate-900 border-red-500/80 text-red-200 shadow-red-950/50">
+            <div class="flex items-center gap-4">
+                <div class="text-4xl p-3 rounded-full bg-red-900/50 border border-red-500/50">
+                    ⚠️
+                </div>
+                <div>
+                    <h4 class="font-cinzel font-bold text-xl uppercase tracking-wider text-red-400">
+                        {{ __('Aviso') }}
+                    </h4>
+                    <p class="font-light text-lg mt-1 leading-relaxed">{{ session('item_error') }}</p>
                 </div>
             </div>
         </div>
