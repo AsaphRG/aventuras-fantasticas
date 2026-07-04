@@ -1,3 +1,5 @@
-Lógica de itens possuídos, incluído itens mágicos que aumentam atributos
-Controller de batalhas
-[CONCLUÍDO] Criar o dashboard de personagens com história finalizada
+Sistema de Batalha do Livro - Implementado e Concluído:
+1. Controller de Batalhas (BattleController) implementado com suporte completo às rotas e fluxo de turnos.
+2. Engine de Combate (BattleEngine) com mecânicas de ataque, teste de sorte no dano e controle de rodadas.
+3. Suporte a encontros sequenciais e redirecionamento de vitória (win_go_to), fuga (flee_go_to) e rodadas para fugir (turns_to_flee).
+4. Integração de Regras de Exceção via special_rules_json (Nós 30, 39 e 330 com gatilhos por contagem de golpes e veneno letal).

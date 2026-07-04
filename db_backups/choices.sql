@@ -555,7 +555,7 @@ INSERT INTO `choices` (`from_story_node_id`, `choice_description`, `to_story_nod
 (287, 'Você pode: Oferecer uma Miríade de Bolso', 160, NULL, NULL),
 (287, 'Oferecer algumas Peças de Ouro', 27, NULL, NULL),
 (287, 'Bater em rápida retirada e tentar a outra porta', 25, NULL, NULL),
-(288, 'Você poderá lançar: Um Encanto da Força', 162, NULL, NULL),
+(288, 'Um Encanto da Força', 162, NULL, NULL),
 (288, 'Um Encanto da Levitação', 86, NULL, NULL),
 (289, 'Um Espelho de Prata', 340, NULL, NULL),
 (289, 'Um Frasco de Essência de Erva de Porco', 214, NULL, NULL),
@@ -750,7 +750,10 @@ INSERT INTO `choices` (`from_story_node_id`, `choice_description`, `to_story_nod
 (398, 'Você pode agora seguir ao longo da muralha na direção da Torre Negra', 79, NULL, NULL),
 (399, 'Você pode se mexer depressa e eliminá-lo: ELFO NEGRO HABILIDADE 4 ENERGIA 4 Se você vencer', 272, NULL, NULL),
 (283, 'Continuar', 402, NULL, NULL),
-(402, 'Ir para o menu principal', NULL, NULL, NULL);
+(402, 'Ir para o menu principal', NULL, NULL, NULL),
+(403, 'Passagem da esquerda', 243, NULL, NULL),
+(403, 'Passagem da direita', 2, NULL, NULL)
+;
 
 --
 -- Índices para tabelas despejadas

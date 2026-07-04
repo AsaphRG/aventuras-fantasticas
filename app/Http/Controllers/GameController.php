@@ -10,6 +10,8 @@ use App\Models\PlayerEnchantments;
 use App\Models\PlayerStoryNode;
 use App\Models\NodeEffect;
 use App\Models\Item;
+use App\Logic\BattleEngine;
+use App\Models\StoryBattle;
 
 class GameController extends Controller
 {
@@ -66,6 +68,15 @@ class GameController extends Controller
 
         $choices = $story->choices;
 
+        $battleEngine = new BattleEngine();
+        $battleState = $battleEngine->getOrInitializeBattle($character, $story);
+        $battleConfig = null;
+        if ($battleState) {
+            $battleConfig = StoryBattle::where('story_node_id', $battleState->story_node_id)
+                ->where('enemy_id', $battleState->enemy_id)
+                ->first();
+        }
+
         $data = [
             'character' => $playable_character,
             'model_character' => $character,
@@ -73,6 +84,8 @@ class GameController extends Controller
             'enchantments_list' => $character->enchantments()->with('enchantment')->get(),
             'story' => $story,
             'choices' => $choices,
+            'battle_state' => $battleState,
+            'battle_config' => $battleConfig,
         ];
 
         return view('game', $data);

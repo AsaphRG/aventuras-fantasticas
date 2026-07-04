@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\EnchantmentController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\BattleController;
 use Illuminate\Support\Env;
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
@@ -19,6 +20,10 @@ Route::get('/nextChap/{id}', [GameController::class, 'nextChap'])->name('nextCha
 Route::post('/game/{id}/test-luck', [GameController::class, 'testLuck'])->name('game.test_luck')->middleware('auth');
 Route::post('/game/{id}/cast-spell/{spell_id}', [GameController::class, 'castInstantSpell'])->name('game.cast_spell')->middleware('auth');
 Route::post('/game/{id}/use-item/{item_id}', [GameController::class, 'useItem'])->name('game.use_item')->middleware('auth');
+
+Route::post('/game/{id}/battle/attack', [BattleController::class, 'attack'])->name('battle.attack')->middleware('auth');
+Route::post('/game/{id}/battle/luck', [BattleController::class, 'luck'])->name('battle.luck')->middleware('auth');
+Route::post('/game/{id}/battle/flee', [BattleController::class, 'flee'])->name('battle.flee')->middleware('auth');
 
 Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 

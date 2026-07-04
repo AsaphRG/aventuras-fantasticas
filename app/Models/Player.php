@@ -62,6 +62,11 @@ class Player extends Model
         return $this->hasMany(PlayerStoryNode::class);
     }
 
+    public function battleStates(): HasMany
+    {
+        return $this->hasMany(PlayerBattleState::class);
+    }
+
     public function getId(): int
     {
         return (int) $this->id;

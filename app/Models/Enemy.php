@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Enemy extends Model
 {
+    public $timestamps = false;
+
     public function storyNode(): BelongsToMany
     {
         return $this->belongsToMany(StoryNode::class, 'story_battle', 'enemy_id', 'story_node_id');

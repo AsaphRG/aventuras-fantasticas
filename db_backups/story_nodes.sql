@@ -444,7 +444,8 @@ INSERT INTO `story_nodes` (`id`, `title`, `history`, `battle`) VALUES
 (399, '399', '<p>Você lança o Encanto. O Elfo se aproxima e, ao fazê-lo, a Miríade de Bolso desaparece da sua mão! Ele fica em pé diante de você, aparentemente indefeso, nervosamente decidindo se luta ou se foge. Você pode se mexer depressa e eliminá-lo:</p><p class="combat-stats">ELFO NEGRO<br>HABILIDADE 4 ENERGIA 4</p><p>Se você vencer, volte para 272</p>', 0),
 (400, '400', '<p>Balthus Dire, caído a seus pés, está morto. Sua missão foi cumprida! O Vale dos Salgueiros está livre de ataques por enquanto, pelo menos.</p>', 0),
 (401, 'PRELÚDIO', '<p>Nas profundezas da Cidadela do Caos, o terrível feiticeiro, Balthus Dire, está conspirando e planejando a derrocada do povo generoso do Vale dos Salgueiros. Seus planos de combate estão prontos, seu exército assustador equipado, e o ataque é indiscutivelmente iminente.</p><p>Convocado por uma súplica desesperada de ajuda, VOCÊ é a única esperança do Vale dos Salgueiros. Aluno brilhante do Grande Mago de Yore e um mestre da magia, só você pode empreender uma missão que atinja o próprio coração do mundo de pesadelo de Balthus Dire. Que criaturas monstruosas esperam por você lá?</p>', 0),
-(402, 'O Fim.', '<p>Sua jornada na Cidadela do Caos chegou a um fim trágico. Você não conseguiu completar a sua missão.</p>', 0);
+(402, 'O Fim.', '<p>Sua jornada na Cidadela do Caos chegou a um fim trágico. Você não conseguiu completar a sua missão.</p>', 0),
+(403, '220', 'Duas passagens estão livres.');
 
 --
 -- Índices para tabelas despejadas

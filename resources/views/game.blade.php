@@ -331,6 +331,153 @@
                 </button>
             </form>
         </div>
+    @elseif (isset($battle_state) && $battle_state && in_array($battle_state->status, ['in_progress', 'waiting_luck_test']))
+        <div class="mt-6 p-6 md:p-8 bg-gradient-to-br from-slate-950 via-red-950/40 to-slate-950 border-2 border-red-600/80 rounded-2xl shadow-[0_0_40px_rgba(220,38,38,0.25)] relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-red-600/10 via-transparent to-transparent pointer-events-none"></div>
+
+            <div class="flex items-center justify-center gap-3 mb-6 border-b border-red-500/30 pb-4">
+                <span class="text-3xl animate-pulse">⚔️</span>
+                <h3 class="font-cinzel text-2xl md:text-3xl font-bold text-red-400 uppercase tracking-widest text-center drop-shadow-md">
+                    {{ __('Combate em Andamento') }} ({{ __('Rodada') }} {{ $battle_state->round_number }})
+                </h3>
+                <span class="text-3xl animate-pulse">⚔️</span>
+            </div>
+
+            @php
+                $logData = json_decode($battle_state->last_round_log, true) ?: [];
+                $logMsg = $logData['message'] ?? '';
+            @endphp
+            @if ($logMsg)
+                <div class="mb-8 p-5 bg-slate-900/90 border-l-4 border-amber-500 rounded-r-xl shadow-inner text-amber-200 font-cinzel text-base md:text-lg leading-relaxed">
+                    {{ $logMsg }}
+                </div>
+            @endif
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <!-- Ficha do Jogador -->
+                <div class="p-5 bg-gradient-to-b from-slate-900 to-slate-950 border border-emerald-500/40 rounded-xl shadow-lg relative group">
+                    <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                        <span class="font-cinzel font-bold text-lg text-emerald-400 flex items-center gap-2">
+                            <span>🛡️</span> {{ __('Sua Ficha') }}
+                        </span>
+                        <span class="text-xs uppercase px-2 py-1 bg-emerald-950 text-emerald-300 rounded border border-emerald-500/30">Herói</span>
+                    </div>
+                    <div class="space-y-4 font-cinzel">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">{{ __('Habilidade') }}:</span>
+                            <span class="text-xl font-bold text-amber-400">{{ $character->getSkillCurrent() }}</span>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-slate-400">{{ __('Energia') }}:</span>
+                                <span class="text-xl font-bold text-emerald-400">{{ $character->getEnergyCurrent() }} / {{ $character->energyStart }}</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                @php
+                                    $hpPercent = max(0, min(100, ($character->getEnergyCurrent() / max(1, $character->energyStart)) * 100));
+                                @endphp
+                                <div class="bg-gradient-to-r from-emerald-500 to-green-400 h-full transition-all duration-500" style="width: {{ $hpPercent }}%"></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">{{ __('Sorte') }}:</span>
+                            <span class="text-xl font-bold text-purple-400">{{ $character->getLuckCurrent() }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ficha do Inimigo -->
+                <div class="p-5 bg-gradient-to-b from-slate-900 to-red-950/60 border border-red-500/50 rounded-xl shadow-lg relative group">
+                    <div class="flex items-center justify-between mb-4 border-b border-red-900/50 pb-3">
+                        <span class="font-cinzel font-bold text-lg text-red-400 flex items-center gap-2">
+                            <span>🐉</span> {{ $battle_state->enemy->name }}
+                        </span>
+                        <span class="text-xs uppercase px-2 py-1 bg-red-950 text-red-300 rounded border border-red-500/30">Oponente</span>
+                    </div>
+                    <div class="space-y-4 font-cinzel">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">{{ __('Habilidade') }}:</span>
+                            <span class="text-xl font-bold text-amber-400">{{ $battle_state->enemy_current_ability }}</span>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-slate-400">{{ __('Energia') }}:</span>
+                                <span class="text-xl font-bold text-red-400">{{ $battle_state->enemy_current_energy }}</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                @php
+                                    $enemyMax = max(1, $battle_state->enemy->energy);
+                                    $enemyPercent = max(0, min(100, ($battle_state->enemy_current_energy / $enemyMax) * 100));
+                                @endphp
+                                <div class="bg-gradient-to-r from-red-600 to-rose-500 h-full transition-all duration-500" style="width: {{ $enemyPercent }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de Ação do Combate -->
+            @if ($battle_state->status === 'waiting_luck_test')
+                <div class="p-6 bg-purple-950/60 border-2 border-purple-500 rounded-xl text-center shadow-xl mb-4">
+                    <h4 class="font-cinzel text-xl font-bold text-purple-300 mb-2">🍀 {{ __('Momento Decisivo: Testar Sua Sorte?') }}</h4>
+                    <p class="text-slate-300 text-sm mb-6 max-w-xl mx-auto font-light">
+                        @if ($battle_state->luck_test_context === 'enemy_hit')
+                            {{ __('Você feriu o inimigo! Se testar a sorte e vencer, causará +2 de dano extra (4 no total). Se falhar, o dano será reduzido para apenas 1 ponto.') }}
+                        @else
+                            {{ __('Você foi ferido! Se testar a sorte e vencer, absorverá parte do impacto e sofrerá apenas 1 ponto de dano. Se falhar, o golpe atingirá um ponto crítico e você sofrerá 3 de dano!') }}
+                        @endif
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <form method="POST" action="{{ route('battle.luck', ['id' => $character->getId()]) }}" class="w-full sm:w-auto">
+                            @csrf
+                            <input type="hidden" name="use_luck" value="1">
+                            <button type="submit" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-cinzel font-bold text-base rounded-xl shadow-lg border border-purple-400 transition-all transform hover:-translate-y-0.5 cursor-pointer">
+                                🍀 {{ __('Sim, Testar Minha Sorte (-1 Sorte)') }}
+                            </button>
+                        </form>
+
+                        <form method="POST" action="{{ route('battle.luck', ['id' => $character->getId()]) }}" class="w-full sm:w-auto">
+                            @csrf
+                            <input type="hidden" name="use_luck" value="0">
+                            <button type="submit" class="w-full sm:w-auto px-6 py-4 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-cinzel font-semibold text-base rounded-xl border border-slate-600 transition-all cursor-pointer">
+                                ⏩ {{ __('Não, Aceitar Resultado da Rodada') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <form method="POST" action="{{ route('battle.attack', ['id' => $character->getId()]) }}" class="w-full sm:w-auto flex-1 max-w-md">
+                        @csrf
+                        <button type="submit" class="w-full py-5 px-8 bg-gradient-to-r from-red-600 via-rose-600 to-red-600 hover:from-red-500 hover:via-rose-500 hover:to-red-500 text-white font-cinzel font-bold text-lg rounded-xl shadow-[0_0_25px_rgba(220,38,38,0.5)] border border-red-400 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer flex items-center justify-center gap-3">
+                            <span>⚔️</span>
+                            <span>{{ __('ATACAR / PRÓXIMA RODADA') }}</span>
+                            <span>⚔️</span>
+                        </button>
+                    </form>
+
+                    @if ($battle_config && $battle_config->can_flee)
+                        @php
+                            $canFleeNow = $battle_config->flee_after_rounds === null || $battle_state->round_number > $battle_config->flee_after_rounds;
+                        @endphp
+                        @if ($canFleeNow)
+                            <form method="POST" action="{{ route('battle.flee', ['id' => $character->getId()]) }}" class="w-full sm:w-auto">
+                                @csrf
+                                <button type="submit" class="w-full py-5 px-6 bg-amber-600/80 hover:bg-amber-600 text-white font-cinzel font-bold text-base rounded-xl border border-amber-400 shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2">
+                                    <span>🏃</span>
+                                    <span>{{ __('FUGIR DA BATALHA') }}</span>
+                                </button>
+                            </form>
+                        @else
+                            <button disabled class="w-full sm:w-auto py-5 px-6 bg-slate-800/80 text-slate-500 font-cinzel font-semibold text-sm rounded-xl border border-slate-700 cursor-not-allowed flex items-center justify-center gap-2">
+                                <span>🔒</span>
+                                <span>{{ __('Fuga liberada após rodada') }} {{ $battle_config->flee_after_rounds }}</span>
+                            </button>
+                        @endif
+                    @endif
+                </div>
+            @endif
+        </div>
     @else
         <div class="flex flex-col gap-3">
             <h3 class="text-slate-400 font-cinzel text-sm uppercase tracking-widest mb-2 ml-1">{{ __('What are you going to do?') }}</h3>
