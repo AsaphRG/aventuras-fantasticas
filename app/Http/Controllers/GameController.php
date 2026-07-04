@@ -49,6 +49,8 @@ class GameController extends Controller
             return redirect()->route('enchantment_choice', ['id' => $character->id]);
         }
 
+        $this->checkEndGameStatus($character);
+
         $playable_character = new PlayerLogic($character->skillStart, $character->skillCurrent, $character->energyStart, $character->energyCurrent, $character->luckStart, $character->luckCurrent, $character->enchantmentStart, $character->gold, $character->currentStoryNode, $character->id, $character->win, $character->dead);
 
         $playable_character->createGrimory($enchantments);
@@ -79,6 +81,10 @@ class GameController extends Controller
         $character = $user->character()->findOrFail($character_id);
 
         $choice = Choice::findOrFail($request->choice_id);
+
+        if (is_null($choice->to_story_node_id)) {
+            return redirect()->route('adventure_choice');
+        }
 
         if ($choice->required_flag) {
             $flagName = $choice->required_flag;
@@ -116,6 +122,7 @@ class GameController extends Controller
 
         $character->currentStoryNode = $choice->to_story_node_id;
         $this->applyNodeEffects($character, $choice->to_story_node_id);
+        $this->checkEndGameStatus($character);
         $character->save();
 
         PlayerStoryNode::create([
@@ -198,6 +205,7 @@ class GameController extends Controller
 
         $character->currentStoryNode = $targetNode;
         $this->applyNodeEffects($character, $targetNode);
+        $this->checkEndGameStatus($character);
         $character->save();
 
         PlayerStoryNode::create([
@@ -239,6 +247,24 @@ class GameController extends Controller
 
         if (!empty($messages)) {
             session()->flash('node_effects', $messages);
+        }
+    }
+
+    private function checkEndGameStatus($character): void {
+        $dirty = false;
+        if ($character->currentStoryNode == 402 || $character->energyCurrent <= 0) {
+            if (!$character->dead) {
+                $character->dead = true;
+                $dirty = true;
+            }
+        } elseif ($character->currentStoryNode == 400) {
+            if (!$character->win) {
+                $character->win = true;
+                $dirty = true;
+            }
+        }
+        if ($dirty) {
+            $character->save();
         }
     }
 }

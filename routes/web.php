@@ -11,6 +11,7 @@ use Illuminate\Support\Env;
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/adventure_choice', [GameController::class, 'adventureChoice'])->name('adventure_choice')->middleware('auth');
 Route::get('/new_character', [CharacterController::class, 'newCharacter'])->name('new_character')->middleware('auth');
+Route::get('/character/{id}', [CharacterController::class, 'show'])->name('character.show')->middleware('auth');
 Route::get('/game/{id}', [GameController::class, 'game'])->name('game')->middleware('auth');
 Route::get('/game/{id}/enchantment_choice', [EnchantmentController::class, 'enchantmentChoice'])->name('enchantment_choice')->middleware('auth');
 Route::post('/game/{id}/save_enchantments', [EnchantmentController::class, 'enchantmentAttribution'])->name('save_enchantments')->middleware('auth');
@@ -18,9 +19,7 @@ Route::get('/nextChap/{id}', [GameController::class, 'nextChap'])->name('nextCha
 Route::post('/game/{id}/test-luck', [GameController::class, 'testLuck'])->name('game.test_luck')->middleware('auth');
 Route::post('/game/{id}/cast-spell/{spell_id}', [GameController::class, 'castInstantSpell'])->name('game.cast_spell')->middleware('auth');
 
-Route::get('/dashboard', function () {
-    return view('dashboard', ['totalGames' => 0, 'totalWins' => 0, 'totalDeaths' => 0, 'winRate' => 0, 'heroes' => []]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

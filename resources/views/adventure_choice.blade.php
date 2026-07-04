@@ -215,9 +215,12 @@
                     </div>
                 </div>
 
-                <form method="GET" action="{{ route('game', ['id'=>$character->getId()]) }}" class="p-4 pt-0">
+                <form method="GET" action="{{ route('game', ['id'=>$character->getId()]) }}" class="p-4 pt-0 flex gap-2">
                     @csrf
-                    <button type="submit" class="w-full py-2 bg-slate-700 hover:bg-amber-600 text-white font-bold rounded transition-colors uppercase text-sm tracking-wider border border-transparent hover:border-amber-400">
+                    <a href="{{ route('character.show', ['id'=>$character->getId()]) }}" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-amber-400 hover:text-amber-300 font-bold rounded transition-colors uppercase text-xs flex items-center justify-center border border-slate-600 hover:border-amber-500/50 shadow-sm" title="{{ __('View Chronicle') }}">
+                        📜
+                    </a>
+                    <button type="submit" class="flex-grow py-2 bg-slate-700 hover:bg-amber-600 text-white font-bold rounded transition-colors uppercase text-sm tracking-wider border border-transparent hover:border-amber-400">
                         {{ __('Continue Journey') }}
                     </button>
                 </form>

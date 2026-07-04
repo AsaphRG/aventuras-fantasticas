@@ -202,6 +202,24 @@
     <div class="bg-slate-800/80 backdrop-blur-sm p-8 rounded-xl border border-slate-700 shadow-2xl relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-50"></div>
 
+        @if ($character->getDead() || $story->id == 402)
+            <div class="mb-6 p-5 bg-gradient-to-r from-red-950/90 to-slate-900 border-2 border-red-500/80 rounded-xl text-red-300 flex items-center gap-4 shadow-xl">
+                <span class="text-4xl">💀</span>
+                <div>
+                    <h4 class="font-cinzel font-bold text-xl uppercase tracking-wider text-red-400">Missão Fracassada</h4>
+                    <p class="text-sm font-light text-red-200 mt-1">Seu herói encontrou seu fim na Cidadela do Caos.</p>
+                </div>
+            </div>
+        @elseif ($character->getWin() || $story->id == 400)
+            <div class="mb-6 p-5 bg-gradient-to-r from-amber-950/90 to-slate-900 border-2 border-amber-500/80 rounded-xl text-amber-300 flex items-center gap-4 shadow-xl">
+                <span class="text-4xl">🏆</span>
+                <div>
+                    <h4 class="font-cinzel font-bold text-xl uppercase tracking-wider text-amber-400">Vitória Gloriosa!</h4>
+                    <p class="text-sm font-light text-amber-100 mt-1">Você derrotou Balthus Dire e salvou o Vale dos Salgueiros!</p>
+                </div>
+            </div>
+        @endif
+
         <h1 class="font-cinzel text-3xl md:text-4xl text-amber-500 mb-6 drop-shadow-sm border-b border-slate-700 pb-4">
             {{$story->title}}
         </h1>
@@ -251,19 +269,27 @@
                         @csrf
                         <input type="hidden" name="choice_id" value="{{$choice->id}}">
 
-                        <button type="submit" class="group w-full text-left p-5 bg-slate-900 border border-slate-700 rounded-lg hover:border-amber-500 hover:bg-slate-800 transition-all duration-300 shadow-md hover:shadow-amber-900/10 flex items-center justify-between">
-                            <span class="text-lg text-slate-200 group-hover:text-amber-400 font-cinzel transition-colors flex items-center gap-2">
-                                @if($choice->required_flag)
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-purple-900/80 text-purple-300 border border-purple-500/40 shrink-0">
-                                        🔮 Requer: {{ $choice->required_flag }}
-                                    </span>
-                                @endif
-                                <span>{{$choice->choice_description}}</span>
-                            </span>
-                            <span class="opacity-0 group-hover:opacity-100 text-amber-500 transition-opacity">
-                                ➤
-                            </span>
-                        </button>
+                        @if (is_null($choice->to_story_node_id))
+                            <button type="submit" class="group w-full text-center p-5 bg-gradient-to-r from-red-900 via-slate-900 to-red-900 border-2 border-red-500/70 rounded-xl hover:border-red-400 hover:bg-slate-800 transition-all duration-300 shadow-xl shadow-red-950/50 flex items-center justify-center gap-3">
+                                <span class="text-xl font-bold text-red-200 group-hover:text-white font-cinzel tracking-wider uppercase flex items-center gap-2">
+                                    <span>🔙 {{$choice->choice_description}}</span>
+                                </span>
+                            </button>
+                        @else
+                            <button type="submit" class="group w-full text-left p-5 bg-slate-900 border border-slate-700 rounded-lg hover:border-amber-500 hover:bg-slate-800 transition-all duration-300 shadow-md hover:shadow-amber-900/10 flex items-center justify-between">
+                                <span class="text-lg text-slate-200 group-hover:text-amber-400 font-cinzel transition-colors flex items-center gap-2">
+                                    @if($choice->required_flag)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-purple-900/80 text-purple-300 border border-purple-500/40 shrink-0">
+                                            🔮 Requer: {{ $choice->required_flag }}
+                                        </span>
+                                    @endif
+                                    <span>{{$choice->choice_description}}</span>
+                                </span>
+                                <span class="opacity-0 group-hover:opacity-100 text-amber-500 transition-opacity">
+                                    ➤
+                                </span>
+                            </button>
+                        @endif
                     </form>
                 @endif
             @endforeach

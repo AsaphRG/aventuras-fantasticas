@@ -62,6 +62,36 @@ class Player extends Model
         return $this->hasMany(PlayerStoryNode::class);
     }
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
+    public function getCurrentStoryNode(): int
+    {
+        return (int) $this->currentStoryNode;
+    }
+
+    public function getSkillCurrent(): int
+    {
+        return (int) $this->skillCurrent;
+    }
+
+    public function getEnergyCurrent(): int
+    {
+        return (int) $this->energyCurrent;
+    }
+
+    public function getLuckCurrent(): int
+    {
+        return (int) $this->luckCurrent;
+    }
+
+    public function getGold(): int
+    {
+        return (int) $this->gold;
+    }
+
     /**
      * Sincroniza as magias não utilizadas e itens do personagem com a tabela player_flag.
      * Isso é essencial para garantir que personagens já criados antes da implementação de flags tenham seus registros.

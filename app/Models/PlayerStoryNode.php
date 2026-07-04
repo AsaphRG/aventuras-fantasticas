@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PlayerStoryNode extends Model
 {
@@ -18,8 +17,8 @@ class PlayerStoryNode extends Model
         return $this->belongsTo(Player::class, 'player_id');
     }
 
-    public function storyNode(): HasOne
+    public function storyNode(): BelongsTo
     {
-        return $this->hasOne(StoryNode::class, 'story_node_id');
+        return $this->belongsTo(StoryNode::class, 'story_node_id', 'id');
     }
 }

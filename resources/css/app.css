@@ -4,14 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-    cursor: default;
-}
-
-a, button, input {
-    cursor: pointer;
-}
-
 input[type="email"], input[type="password"], input[type="text"] {
     cursor: text;
 }
