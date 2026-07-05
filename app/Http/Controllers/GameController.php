@@ -339,12 +339,16 @@ class GameController extends Controller
 
     private function checkEndGameStatus($character): void {
         $dirty = false;
-        if ($character->currentStoryNode == 402 || $character->energyCurrent <= 0) {
+        $node = \App\Models\StoryNode::find($character->currentStoryNode);
+        $isDeathNode = ($character->currentStoryNode == 402 || ($node && $node->is_death));
+        $isWinNode = ($character->currentStoryNode == 400 || ($node && $node->is_win));
+
+        if ($isDeathNode || $character->energyCurrent <= 0) {
             if (!$character->dead) {
                 $character->dead = true;
                 $dirty = true;
             }
-        } elseif ($character->currentStoryNode == 400) {
+        } elseif ($isWinNode) {
             if (!$character->win) {
                 $character->win = true;
                 $dirty = true;

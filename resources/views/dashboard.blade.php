@@ -126,6 +126,7 @@
                                     </span>
                                 </div>
                             </div>
+                        </div>
                     @endforeach
                 </div>
             @endif

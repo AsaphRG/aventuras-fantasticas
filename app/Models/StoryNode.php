@@ -11,6 +11,20 @@ class StoryNode extends Model
 {
     public $timestamps = false;
 
+    protected $fillable = [
+        'title',
+        'history',
+        'battle',
+        'is_death',
+        'is_win',
+    ];
+
+    protected $casts = [
+        'battle' => 'boolean',
+        'is_death' => 'boolean',
+        'is_win' => 'boolean',
+    ];
+
     public function choices(): HasMany
     {
         return $this->hasMany(Choice::class, 'from_story_node_id');

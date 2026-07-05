@@ -23,4 +23,16 @@ abstract class Fighter {
     public function isAlive():bool {
         return $this->energyCurrent > 0;
     }
+
+    public function __get(string $name): mixed
+    {
+        $method = 'get' . ucfirst($name);
+        if (method_exists($this, $method)) {
+            return $this->$method();
+        }
+        if (property_exists($this, $name)) {
+            return $this->$name;
+        }
+        return null;
+    }
 }

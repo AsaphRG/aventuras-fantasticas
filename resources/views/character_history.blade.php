@@ -112,8 +112,8 @@
                             $nodeObj = $step->storyNode;
                             
                             // Cores especiais para nós de fim
-                            $isEndWin = ($nodeId == 400);
-                            $isEndLoss = ($nodeId == 402);
+                            $isEndWin = ($nodeId == 400 || ($nodeObj && $nodeObj->is_win));
+                            $isEndLoss = ($nodeId == 402 || ($nodeObj && $nodeObj->is_death));
                             $cardBorder = $isEndWin ? 'border-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.15)]' : ($isEndLoss ? 'border-red-900 shadow-[0_0_20px_rgba(239,68,68,0.15)]' : 'border-slate-700/80 hover:border-slate-600');
                             $dotColor = $isEndWin ? 'bg-amber-500 ring-4 ring-amber-500/20' : ($isEndLoss ? 'bg-red-500 ring-4 ring-red-500/20' : 'bg-slate-600 group-hover:bg-amber-400');
                         @endphp

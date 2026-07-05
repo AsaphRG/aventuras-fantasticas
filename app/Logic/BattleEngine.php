@@ -26,6 +26,16 @@ class BattleEngine
             return $battleState;
         }
 
+        // Verifica se o jogador já concluiu os combates deste nó para não reabrir em loop infinito
+        $alreadyFinished = PlayerBattleState::where('player_id', $player->id)
+            ->where('story_node_id', $node->id)
+            ->whereIn('status', ['won', 'fled'])
+            ->exists();
+
+        if ($alreadyFinished) {
+            return null;
+        }
+
         // Se não há batalha ativa, verifica se o nó possui inimigos configurados em story_battle
         $storyBattles = StoryBattle::where('story_node_id', $node->id)
             ->orderBy('fight_order', 'asc')
@@ -173,7 +183,7 @@ class BattleEngine
                     $battleState->enemy_current_energy = $nextEnemy->energy;
                     $status = 'in_progress';
                     $luckContext = 'none';
-                    $msg .= " 💀 {$enemyName} foi derrotado! Você agora enfrenta um novo oponente: {$nextEnemy->name}!";
+                    $msg .= " 🏆 Você derrotou {$enemyName}! Combate vencido! Você agora enfrenta um novo oponente: {$nextEnemy->name}!";
                 }
             } else {
                 $status = 'won';
@@ -259,10 +269,19 @@ class BattleEngine
                 $config = StoryBattle::where('story_node_id', $battleState->story_node_id)
                     ->where('enemy_id', $battleState->enemy_id)
                     ->first();
-                $nextEnemyBattle = StoryBattle::where('story_node_id', $battleState->story_node_id)
-                    ->where('fight_order', '>', $config ? $config->fight_order : 1)
-                    ->orderBy('fight_order', 'asc')
-                    ->first();
+                $nextEnemyBattle = null;
+                if ($config && $config->win_go_to === null) {
+                    $nextEnemyBattle = StoryBattle::where('story_node_id', $battleState->story_node_id)
+                        ->where('enemy_id', '>', $battleState->enemy_id)
+                        ->orderBy('enemy_id', 'asc')
+                        ->first();
+                }
+                if (!$nextEnemyBattle) {
+                    $nextEnemyBattle = StoryBattle::where('story_node_id', $battleState->story_node_id)
+                        ->where('fight_order', '>', $config ? $config->fight_order : 1)
+                        ->orderBy('fight_order', 'asc')
+                        ->first();
+                }
 
                 if ($nextEnemyBattle) {
                     $nextEnemy = Enemy::find($nextEnemyBattle->enemy_id);
@@ -271,11 +290,15 @@ class BattleEngine
                         $battleState->enemy_current_ability = $nextEnemy->ability;
                         $battleState->enemy_current_energy = $nextEnemy->energy;
                         $battleState->status = 'in_progress';
-                        $luckMsg .= " 💀 O oponente caiu! Um novo adversário surge: {$nextEnemy->name}!";
+                        $luckMsg .= " 🏆 O inimigo foi aniquilado! Combate vencido! Um novo adversário surge: {$nextEnemy->name}!";
                     }
                 } else {
                     $battleState->status = 'won';
                     $luckMsg .= " 🏆 O inimigo foi aniquilado! Combate vencido!";
+                    if ($config && $config->win_go_to) {
+                        $player->currentStoryNode = $config->win_go_to;
+                        $player->save();
+                    }
                 }
             } else {
                 $battleState->status = 'in_progress';
@@ -317,6 +340,7 @@ class BattleEngine
 
         return [
             'success' => true,
+            'message' => $baseMsg . $luckMsg,
             'luck_msg' => $luckMsg,
             'status' => $battleState->status,
             'player_energy' => $player->energyCurrent,

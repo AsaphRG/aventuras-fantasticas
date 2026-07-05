@@ -192,6 +192,16 @@ class Player extends Fighter {
             case 'gold':
                 $value > 0 ? $this->increaseGold($value) : $this->decreaseGold(abs($value));
                 break;
+            case 'dead':
+                if ($value > 0 || $value === true || $value === '1') {
+                    $this->setDead(true);
+                }
+                break;
+            case 'win':
+                if ($value > 0 || $value === true || $value === '1') {
+                    $this->setWin(true);
+                }
+                break;
         }
     }
 
@@ -200,5 +210,7 @@ class Player extends Fighter {
         $character->energyCurrent = $this->getEnergyCurrent();
         $character->luckCurrent = $this->getLuckCurrent();
         $character->gold = $this->getGold();
+        $character->dead = $this->getDead();
+        $character->win = $this->getWin();
     }
 }

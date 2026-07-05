@@ -9,6 +9,8 @@ use App\Models\Player;
 use App\Models\StoryNode;
 use App\Models\Enemy;
 use App\Models\StoryBattle;
+use App\Models\Enchantment;
+use App\Models\PlayerEnchantments;
 use App\Logic\BattleEngine;
 
 class BattleExceptionsTest extends TestCase
@@ -182,6 +184,277 @@ class BattleExceptionsTest extends TestCase
         $this->assertEquals(208, $character->currentStoryNode);
         $this->assertTrue((bool) $character->dead);
         $this->assertEquals('lost', $battleState->status);
+    }
+
+    public function test_sequential_battle_shows_victory_message()
+    {
+        $user = User::factory()->create();
+        $storyNode = StoryNode::forceCreate(['id' => 999, 'title' => '999', 'history' => 'Batalha Dupla', 'battle' => 1]);
+        $enemy1 = Enemy::forceCreate(['id' => 10, 'name' => 'Goblin 1', 'ability' => 1, 'energy' => 2]);
+        $enemy2 = Enemy::forceCreate(['id' => 11, 'name' => 'Goblin 2', 'ability' => 6, 'energy' => 6]);
+
+        StoryBattle::create([
+            'story_node_id' => 999,
+            'enemy_id' => 10,
+            'fight_order' => 1,
+            'win_go_to' => null
+        ]);
+        StoryBattle::create([
+            'story_node_id' => 999,
+            'enemy_id' => 11,
+            'fight_order' => 2,
+            'win_go_to' => 1000
+        ]);
+
+        $character = Player::forceCreate([
+            'user_id' => $user->id,
+            'class' => 'Warrior',
+            'skillStart' => 20, 'skillCurrent' => 20,
+            'energyStart' => 20, 'energyCurrent' => 20,
+            'luckStart' => 12, 'luckCurrent' => 12,
+            'enchantmentStart' => 0, 'gold' => 10,
+            'currentStoryNode' => 999,
+            'win' => false, 'dead' => false
+        ]);
+
+        $engine = new BattleEngine();
+        $battleState = $engine->getOrInitializeBattle($character, $storyNode);
+
+        // Derrota o Goblin 1
+        $battleState->enemy_current_energy = 0;
+        $battleState->save();
+
+        $res = $engine->nextRound($character, $battleState);
+
+        $this->assertStringContainsString('🏆 Você derrotou Goblin 1! Combate vencido!', $res['message']);
+        $this->assertStringContainsString('Você agora enfrenta um novo oponente: Goblin 2!', $res['message']);
+        $this->assertEquals('in_progress', $battleState->status);
+        $this->assertEquals(11, $battleState->enemy_id);
+    }
+
+    public function test_sequential_battle_luck_test_shows_victory_message()
+    {
+        $user = User::factory()->create();
+        $storyNode = StoryNode::forceCreate(['id' => 998, 'title' => '998', 'history' => 'Batalha Dupla Sorte', 'battle' => 1]);
+        $enemy1 = Enemy::forceCreate(['id' => 12, 'name' => 'Orc 1', 'ability' => 1, 'energy' => 1]);
+        $enemy2 = Enemy::forceCreate(['id' => 13, 'name' => 'Orc 2', 'ability' => 6, 'energy' => 6]);
+
+        StoryBattle::create([
+            'story_node_id' => 998,
+            'enemy_id' => 12,
+            'fight_order' => 1,
+            'win_go_to' => null
+        ]);
+        StoryBattle::create([
+            'story_node_id' => 998,
+            'enemy_id' => 13,
+            'fight_order' => 2,
+            'win_go_to' => 1000
+        ]);
+
+        $character = Player::forceCreate([
+            'user_id' => $user->id,
+            'class' => 'Warrior',
+            'skillStart' => 20, 'skillCurrent' => 20,
+            'energyStart' => 20, 'energyCurrent' => 20,
+            'luckStart' => 12, 'luckCurrent' => 12,
+            'enchantmentStart' => 0, 'gold' => 10,
+            'currentStoryNode' => 998,
+            'win' => false, 'dead' => false
+        ]);
+
+        $engine = new BattleEngine();
+        $battleState = $engine->getOrInitializeBattle($character, $storyNode);
+
+        // Configura estado para teste de sorte com energia no limiar (dano extra mata)
+        $battleState->luck_test_context = 'enemy_hit';
+        $battleState->enemy_current_energy = 0;
+        $battleState->save();
+
+        $res = $engine->testLuckInBattle($character, $battleState, true);
+
+        $this->assertStringContainsString('🏆 O inimigo foi aniquilado! Combate vencido!', $res['message']);
+        $this->assertStringContainsString('Um novo adversário surge: Orc 2!', $res['message']);
+        $this->assertEquals('in_progress', $battleState->status);
+        $this->assertEquals(13, $battleState->enemy_id);
+    }
+
+    public function test_ajax_battle_attack_returns_json()
+    {
+        $user = User::factory()->create();
+        $storyNode = StoryNode::forceCreate(['id' => 997, 'title' => '997', 'history' => 'Batalha AJAX', 'battle' => 1]);
+        $enemy = Enemy::forceCreate(['id' => 14, 'name' => 'Lobo', 'ability' => 5, 'energy' => 4]);
+
+        StoryBattle::create([
+            'story_node_id' => 997,
+            'enemy_id' => 14,
+            'fight_order' => 1,
+            'win_go_to' => null
+        ]);
+
+        $character = Player::forceCreate([
+            'user_id' => $user->id,
+            'class' => 'Warrior',
+            'skillStart' => 20, 'skillCurrent' => 20,
+            'energyStart' => 20, 'energyCurrent' => 20,
+            'luckStart' => 12, 'luckCurrent' => 12,
+            'enchantmentStart' => 0, 'gold' => 10,
+            'currentStoryNode' => 997,
+            'win' => false, 'dead' => false
+        ]);
+
+        $response = $this->actingAs($user)
+            ->withHeader('Accept', 'application/json')
+            ->post(route('battle.attack', ['id' => $character->id]));
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'success',
+                'status',
+                'round_number',
+                'message',
+                'luck_test_context',
+                'player' => ['energy_current', 'energy_start', 'skill_current', 'luck_current', 'dead'],
+                'enemy' => ['id', 'name', 'ability', 'energy_current', 'energy_max'],
+            ]);
+    }
+
+    public function test_game_view_renders_alpine_battle_component()
+    {
+        $user = User::factory()->create();
+        StoryNode::forceCreate(['id' => 998, 'title' => '998', 'history' => 'Arena de Batalha', 'battle' => 1]);
+        Enemy::forceCreate(['id' => 15, 'name' => 'Goblin', 'ability' => 6, 'energy' => 5]);
+
+        StoryBattle::create([
+            'story_node_id' => 998,
+            'enemy_id' => 15,
+            'fight_order' => 1,
+            'win_go_to' => null
+        ]);
+
+        $character = Player::forceCreate([
+            'user_id' => $user->id,
+            'class' => 'Warrior',
+            'skillStart' => 20, 'skillCurrent' => 20,
+            'energyStart' => 20, 'energyCurrent' => 20,
+            'luckStart' => 12, 'luckCurrent' => 12,
+            'enchantmentStart' => 10, 'gold' => 10,
+            'currentStoryNode' => 998,
+            'win' => false, 'dead' => false
+        ]);
+
+        Enchantment::insert(['id' => 99, 'name' => 'Teste', 'description' => 'Desc']);
+        PlayerEnchantments::insert([
+            'player_id' => $character->id,
+            'enchantment_id' => 99,
+            'used' => false
+        ]);
+
+        // Initialize the battle in the engine so state exists
+        $engine = new BattleEngine();
+        $engine->getOrInitializeBattle($character, $character->storyNode);
+
+        $response = $this->actingAs($user)->get(route('game', ['id' => $character->id]));
+
+        $response->assertStatus(200)
+            ->assertSee('x-data="battleArena(', false)
+            ->assertSee('ATACAR / PRÓXIMA RODADA');
+    }
+
+    public function test_node_288_sequential_battle_no_loop_and_transition_to_32()
+    {
+        $user = User::factory()->create();
+        $storyNode = StoryNode::forceCreate(['id' => 888, 'title' => '888', 'history' => 'Luta 888', 'battle' => 1]);
+        StoryNode::forceCreate(['id' => 889, 'title' => '889', 'history' => 'Vitória 889', 'battle' => 0]);
+        Enemy::forceCreate(['id' => 100, 'name' => 'Macaco', 'ability' => 1, 'energy' => 2]);
+        Enemy::forceCreate(['id' => 101, 'name' => 'Cachorro', 'ability' => 1, 'energy' => 2]);
+
+        StoryBattle::create([
+            'story_node_id' => 888,
+            'enemy_id' => 100,
+            'fight_order' => 1,
+            'win_go_to' => null
+        ]);
+        StoryBattle::create([
+            'story_node_id' => 888,
+            'enemy_id' => 101,
+            'fight_order' => 2,
+            'win_go_to' => 889
+        ]);
+
+        $character = Player::forceCreate([
+            'user_id' => $user->id,
+            'class' => 'Warrior',
+            'skillStart' => 20, 'skillCurrent' => 20,
+            'energyStart' => 20, 'energyCurrent' => 20,
+            'luckStart' => 12, 'luckCurrent' => 12,
+            'enchantmentStart' => 0, 'gold' => 10,
+            'currentStoryNode' => 888,
+            'win' => false, 'dead' => false
+        ]);
+
+        $engine = new BattleEngine();
+        $battleState = $engine->getOrInitializeBattle($character, $storyNode);
+        $this->assertEquals(100, $battleState->enemy_id);
+
+        // Derrota o primeiro inimigo
+        $battleState->enemy_current_energy = 0;
+        $battleState->save();
+        $engine->nextRound($character, $battleState);
+        $this->assertEquals('in_progress', $battleState->status);
+        $this->assertEquals(101, $battleState->enemy_id);
+
+        // Derrota o segundo inimigo
+        $battleState->enemy_current_energy = 0;
+        $battleState->save();
+        $engine->nextRound($character, $battleState);
+        $this->assertEquals('won', $battleState->status);
+
+        $character->refresh();
+        $this->assertEquals(889, $character->currentStoryNode);
+
+        // Tentar obter ou inicializar batalha novamente no nó 888 não deve criar novo combate em loop
+        $reInitialized = $engine->getOrInitializeBattle($character, $storyNode);
+        $this->assertNull($reInitialized);
+    }
+
+    public function test_sequential_battle_luck_test_win_go_to_transition()
+    {
+        $user = User::factory()->create();
+        $storyNode = StoryNode::forceCreate(['id' => 887, 'title' => '887', 'history' => 'Luta Sorte 887', 'battle' => 1]);
+        StoryNode::forceCreate(['id' => 889, 'title' => '889', 'history' => 'Vitória 889', 'battle' => 0]);
+        Enemy::forceCreate(['id' => 102, 'name' => 'Urso', 'ability' => 1, 'energy' => 1]);
+
+        StoryBattle::create([
+            'story_node_id' => 887,
+            'enemy_id' => 102,
+            'fight_order' => 1,
+            'win_go_to' => 889
+        ]);
+
+        $character = Player::forceCreate([
+            'user_id' => $user->id,
+            'class' => 'Warrior',
+            'skillStart' => 20, 'skillCurrent' => 20,
+            'energyStart' => 20, 'energyCurrent' => 20,
+            'luckStart' => 12, 'luckCurrent' => 12,
+            'enchantmentStart' => 0, 'gold' => 10,
+            'currentStoryNode' => 887,
+            'win' => false, 'dead' => false
+        ]);
+
+        $engine = new BattleEngine();
+        $battleState = $engine->getOrInitializeBattle($character, $storyNode);
+        $battleState->luck_test_context = 'enemy_hit';
+        $battleState->enemy_current_energy = 2;
+        $battleState->save();
+
+        $engine->testLuckInBattle($character, $battleState, true);
+
+        $character->refresh();
+        $battleState->refresh();
+        $this->assertEquals('won', $battleState->status);
+        $this->assertEquals(889, $character->currentStoryNode);
     }
 }
 
